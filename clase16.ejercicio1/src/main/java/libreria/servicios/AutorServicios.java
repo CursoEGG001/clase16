@@ -4,6 +4,7 @@
  */
 package libreria.servicios;
 
+import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -37,6 +38,17 @@ public class AutorServicios {
         System.out.println("Ingrese el numero de ID del autor que desea encontrar:  ");
         Autor buscado = em.find(Autor.class, leer.nextLong());
         return buscado;
+    }
+
+    public List<Autor> buscarPorAutor(String nombre) {
+        String persistenceUnitName = "com.egg.alumno_PU";
+        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+        System.out.println("Ingrese el numero de ID del autor que desea encontrar:  ");
+
+        List<Autor> busqueda = em.createQuery("SELECT a FROM Autor a WHERE a.Nombre LIKE :nombre")
+                .setParameter("nombre", "%"+nombre+"%")
+                .getResultList();
+        return busqueda;
     }
 
     public Autor modificarAutor() {

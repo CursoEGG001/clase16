@@ -49,7 +49,10 @@ public class Clase16Ejercicio1 {
                 case 2:
                     // Search for an author
                     System.out.println("{[Buscate un Autor]}");
-                    System.out.println(au.buscarAutor());
+                    //System.out.println(au.buscarAutor());
+                    System.out.println("Ingrese un Nombre de Autor");
+                    String dato = leer.next();
+                    System.out.println(au.buscarPorAutor(dato));
                     break;
                 case 3:
                     // Delete an author
