@@ -9,14 +9,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import libreria.entidades.Editorial;
 
-
 /**
  *
  * @author pc
  */
 public class EditorialServicios {
-   
-    Scanner leer = new Scanner(System.in);
+
+    Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
 
     public void crearEditorial() {
         String persistenceUnitName = "com.egg.alumno_PU";
@@ -36,6 +35,7 @@ public class EditorialServicios {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
         System.out.println("Ingrese el numero de ID del editor que desea encontrar:  ");
+
         Editorial buscado = em.find(Editorial.class, leer.nextLong());
         return buscado;
     }
@@ -62,5 +62,5 @@ public class EditorialServicios {
         em.getTransaction().commit();
         System.out.println("Baja del editor realizada con éxito");
 
-    } 
+    }
 }

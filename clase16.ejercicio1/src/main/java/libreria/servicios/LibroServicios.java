@@ -9,15 +9,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import libreria.entidades.Libro;
 
-
 /**
  *
  * @author pc
  */
 public class LibroServicios {
     
-    Scanner leer = new Scanner(System.in);
-
+    Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
+    
     public void crearLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -31,7 +30,7 @@ public class LibroServicios {
         em.persist(libro);
         em.getTransaction().commit();
     }
-
+    
     public Libro buscarLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -39,7 +38,7 @@ public class LibroServicios {
         Libro buscado = em.find(Libro.class, leer.nextLong());
         return buscado;
     }
-
+    
     public Libro modificarLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -51,7 +50,7 @@ public class LibroServicios {
         em.getTransaction().commit();
         return modificado;
     }
-
+    
     public void eliminarLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -61,6 +60,6 @@ public class LibroServicios {
         em.merge(eliminado); // em.remove(eliminado); va en verdad pero se sugiere usar el alta como seguridad que el dato no se usa.
         em.getTransaction().commit();
         System.out.println("Baja del Libro realizada con éxito");
-
+        
     }
 }

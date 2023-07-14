@@ -16,7 +16,7 @@ import libreria.entidades.Autor;
  */
 public class AutorServicios {
 
-    Scanner leer = new Scanner(System.in);
+    Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
 
     public void crearAutor() {
         String persistenceUnitName = "com.egg.alumno_PU";
@@ -46,7 +46,7 @@ public class AutorServicios {
         System.out.println("Ingrese el numero de ID del autor que desea encontrar:  ");
 
         List<Autor> busqueda = em.createQuery("SELECT a FROM Autor a WHERE a.Nombre LIKE :nombre")
-                .setParameter("nombre", "%"+nombre+"%")
+                .setParameter("nombre", "%" + nombre + "%")
                 .getResultList();
         return busqueda;
     }
