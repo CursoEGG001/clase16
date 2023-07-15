@@ -4,9 +4,13 @@
  */
 package libreria.servicios;
 
+import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import libreria.entidades.Autor;
+import libreria.entidades.Editorial;
 import libreria.entidades.Libro;
 
 /**
@@ -14,23 +18,29 @@ import libreria.entidades.Libro;
  * @author pc
  */
 public class LibroServicios {
-    
+
     Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
-    
+
     public void crearLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
         var libro = new Libro();
         System.out.println("Ingrese el numero de ISBN del Libro: ");
         libro.setIsbn(leer.nextLong());
-        System.out.println("Ingrese el título del Libro");
+        System.out.println("Ingrese el título del Libro: ");
         libro.setTitulo(leer.next());
+        System.out.println("Ingrese el año de publicación: ");
+        libro.setAnio(leer.nextInt());
+        System.out.println("Ingrese el autor: ");
+        ponerAutor(libro);
+        System.out.println("Ingrese la editorial : ");
+        ponerEditorial(libro);
         libro.setAlta(Boolean.TRUE);
         em.getTransaction().begin();
         em.persist(libro);
         em.getTransaction().commit();
     }
-    
+
     public Libro buscarLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -38,7 +48,7 @@ public class LibroServicios {
         Libro buscado = em.find(Libro.class, leer.nextLong());
         return buscado;
     }
-    
+
     public Libro modificarLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -50,7 +60,7 @@ public class LibroServicios {
         em.getTransaction().commit();
         return modificado;
     }
-    
+
     public void eliminarLibro() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
@@ -60,6 +70,62 @@ public class LibroServicios {
         em.merge(eliminado); // em.remove(eliminado); va en verdad pero se sugiere usar el alta como seguridad que el dato no se usa.
         em.getTransaction().commit();
         System.out.println("Baja del Libro realizada con éxito");
-        
+
+    }
+
+    public List<Libro> listarLibros() {
+        String persistenceUnitName = "com.egg.alumno_PU";
+        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+        TypedQuery<Libro> consulta = em.createQuery("SELECT l FROM Libro l", Libro.class);
+        return consulta.getResultList();
+    }
+
+    public Libro buscarLibroPorNombre(String nombre) {
+        String persistenceUnitName = "com.egg.alumno_PU";
+        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+        TypedQuery<Libro> listaLibros = em.createQuery("SELECT l FROM Libro l WHERE l.titulo = :nombre", Libro.class);
+        listaLibros.setParameter("nombre", nombre);
+        return listaLibros.getSingleResult();
+    }
+
+    private void ponerAutor(Libro libro) {
+        String paraAutor = "";
+        System.out.println("Ingrese el autor a asignar :");
+        AutorServicios asistencia = new AutorServicios();
+        List<Autor> verifica = asistencia.buscarPorAutor(paraAutor);
+        if (verifica.isEmpty()) {
+            System.out.println("No encontrado. Se creará uno.");
+            asistencia.crearAutor();
+            verifica = asistencia.buscarPorAutor(paraAutor);
+
+            libro.setAutor(verifica.get(0));
+        } else {
+            for (Autor asignado : verifica) {
+                System.out.println("¿Desea asignar " + asignado.getNombre() + " ? (S/N)");
+                String duda = leer.next();
+                if (duda.equalsIgnoreCase("s")) {
+                    libro.setAutor(asignado);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private void ponerEditorial(Libro libro) {
+        String paraEditorial = "";
+        System.out.println("Ingrese el editor a asignar :");
+        paraEditorial=leer.next();
+        EditorialServicios asistencia = new EditorialServicios();
+        Editorial verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
+        if (verifica==null) {
+            System.out.println("No encontrado. Se creará uno.");
+            asistencia.crearEditorial();
+            verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
+
+            libro.setEditorial(verifica);
+        } else {
+            libro.setEditorial(verifica);
+        }
     }
 }

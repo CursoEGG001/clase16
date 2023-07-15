@@ -4,9 +4,9 @@
  */
 package libreria.entidades;
 
+import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -14,9 +14,8 @@ import javax.persistence.OneToOne;
  *
  * @author pc
  */
-
 @Entity
-public class Libro {
+public class Libro implements Serializable {
 
     @Override
     public String toString() {
@@ -24,7 +23,8 @@ public class Libro {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(unique = true)
     private Long isbn;
     private String titulo;
     private Integer anio;

@@ -67,12 +67,32 @@ public class Clase16Ejercicio1 {
                 case 5:
                     // Create a book
                     System.out.println("{[Create un Libro]}");
+
                     lb.crearLibro();
                     break;
                 case 6:
                     // Search for a book
                     System.out.println("{[Buscate un Libro]}");
-                    System.out.println(lb.buscarLibro());
+                    System.out.println("-1. Buscar por ISBN");
+                    System.out.println("-2. Buscar por Nombre");
+                    int criterio=leer.nextInt();
+                  
+                        switch (criterio) {
+                        case 1:
+                            System.out.println("Escriba el ISBN del Libro :");
+                            System.out.println(lb.buscarLibro());
+                            break;
+                        case 2:
+                            System.out.println("Escriba un nombre de libro :");
+                            String paraBuscar=leer.next();
+                            
+                            System.out.println(lb.buscarLibroPorNombre(paraBuscar));
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
+
+
                     break;
                 case 7:
                     // Delete a book
@@ -92,7 +112,8 @@ public class Clase16Ejercicio1 {
                 case 10:
                     // Search for an editorial
                     System.out.println("{[Buscate un Editorial]}");
-                    System.out.println(ed.buscarEditorial());
+                    System.out.println("¿Qué desea buscar?");
+                    System.out.println(ed.buscarEditorialPorNombre(leer.next()));
                     break;
                 case 11:
                     // Delete an editorial
@@ -102,7 +123,7 @@ public class Clase16Ejercicio1 {
                 case 12:
                     // Modify an editorial
                     System.out.println("{[Cambiate un Autor]}");
-                    ed.modificarEditorial();
+                    ed.modificarEditorial(ed.buscarEditorialPorNombre(leer.next()));
                     break;
                 case 0:
                     // Exit
