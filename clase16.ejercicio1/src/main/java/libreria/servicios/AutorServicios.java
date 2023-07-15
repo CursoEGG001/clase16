@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import libreria.entidades.Autor;
 
 /**
@@ -73,6 +74,14 @@ public class AutorServicios {
         em.getTransaction().commit();
         System.out.println("Baja del autor realizada con éxito");
 
+    }
+    
+    
+    public List<Autor> listarAutores() {
+        String persistenceUnitName = "com.egg.alumno_PU";
+        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+        TypedQuery<Autor> query = em.createQuery("SELECT a FROM Autor a", Autor.class);
+        return query.getResultList();
     }
 
 }

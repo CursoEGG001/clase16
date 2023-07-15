@@ -88,7 +88,7 @@ public class LibroServicios {
         return listaLibros.getSingleResult();
     }
 
-    private void ponerAutor(Libro libro) {
+    private Libro ponerAutor(Libro libro) {
         String paraAutor = "";
         System.out.println("Ingrese el autor a asignar :");
         AutorServicios asistencia = new AutorServicios();
@@ -109,10 +109,11 @@ public class LibroServicios {
                 }
             }
         }
+        return libro;
 
     }
 
-    private void ponerEditorial(Libro libro) {
+    private Libro ponerEditorial(Libro libro) {
         String paraEditorial = "";
         System.out.println("Ingrese el editor a asignar :");
         paraEditorial=leer.next();
@@ -127,5 +128,14 @@ public class LibroServicios {
         } else {
             libro.setEditorial(verifica);
         }
+        return libro;
+    }
+    
+    
+    public List<Libro> listarEditoriales() {
+        String persistenceUnitName = "com.egg.alumno_PU";
+        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+        TypedQuery<Libro> query = em.createQuery("SELECT l FROM Libro l", Libro.class);
+        return query.getResultList();
     }
 }
