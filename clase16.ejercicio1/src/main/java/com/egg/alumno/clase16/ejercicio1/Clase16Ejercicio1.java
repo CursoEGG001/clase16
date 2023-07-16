@@ -4,6 +4,9 @@
 package com.egg.alumno.clase16.ejercicio1;
 
 import java.util.Scanner;
+import libreria.entidades.Autor;
+import libreria.entidades.Editorial;
+import libreria.entidades.Libro;
 import libreria.servicios.AutorServicios;
 import libreria.servicios.EditorialServicios;
 import libreria.servicios.LibroServicios;
@@ -36,6 +39,9 @@ public class Clase16Ejercicio1 {
             System.out.println("10. Buscar una editorial");
             System.out.println("11. Eliminar una editorial");
             System.out.println("12. Modificar una editorial");
+            System.out.println("13. Listar Autores");
+            System.out.println("14. Listar Libros");
+            System.out.println("15. Listar Editoriales");
             System.out.println("0. Salir");
 
             option = leer.nextInt();
@@ -75,23 +81,22 @@ public class Clase16Ejercicio1 {
                     System.out.println("{[Buscate un Libro]}");
                     System.out.println("-1. Buscar por ISBN");
                     System.out.println("-2. Buscar por Nombre");
-                    int criterio=leer.nextInt();
-                  
-                        switch (criterio) {
+                    int criterio = leer.nextInt();
+
+                    switch (criterio) {
                         case 1:
                             System.out.println("Escriba el ISBN del Libro :");
                             System.out.println(lb.buscarLibro());
                             break;
                         case 2:
                             System.out.println("Escriba un nombre de libro :");
-                            String paraBuscar=leer.next();
-                            
+                            String paraBuscar = leer.next();
+
                             System.out.println(lb.buscarLibroPorNombre(paraBuscar));
                             break;
                         default:
                             throw new AssertionError();
                     }
-
 
                     break;
                 case 7:
@@ -124,6 +129,29 @@ public class Clase16Ejercicio1 {
                     // Modify an editorial
                     System.out.println("{[Cambiate un Autor]}");
                     ed.modificarEditorial(ed.buscarEditorialPorNombre(leer.next()));
+                    break;
+                case 13:
+                    System.out.println("Lista de Autores:\n\n");
+                    for (Autor losAutores : au.listarAutores()) {
+                        System.out.println(losAutores.getNombre());
+                    }
+                    break;
+                case 14:
+                    System.out.println("Lista de Libros:\n\n");
+                    for (Libro listarLibro : lb.listarLibros()) {
+                        System.out.println(listarLibro.getTitulo()
+                                + " , " + listarLibro.getAutor()
+                                + " , " + listarLibro.getAnio()
+                                + "\n\t" + listarLibro.getEditorial()
+                                + "\tPr.: " + listarLibro.getEjemplaresPrestados()
+                                + "\t N°EJ: " + listarLibro.getEjemplares());
+                    }
+                    break;
+                case 15:
+                    System.out.println("Lista de Editoriales");
+                    for (Editorial laEditorial : ed.listarEditoriales()) {
+                        System.out.println("Ed. " + laEditorial.getNombre());
+                    }
                     break;
                 case 0:
                     // Exit

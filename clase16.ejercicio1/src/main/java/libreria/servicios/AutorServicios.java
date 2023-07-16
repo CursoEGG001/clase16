@@ -23,8 +23,8 @@ public class AutorServicios {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
         var autor = new Autor();
-        System.out.println("Ingrese el numero de id del autor: ");
-        autor.setId(leer.nextLong());
+//        System.out.println("Ingrese el numero de id del autor: ");
+//        autor.setId(leer.nextLong());
         System.out.println("Ingrese el nombre del Autor");
         autor.setNombre(leer.next());
         autor.setAlta(Boolean.TRUE);

@@ -116,10 +116,10 @@ public class LibroServicios {
     private Libro ponerEditorial(Libro libro) {
         String paraEditorial = "";
         System.out.println("Ingrese el editor a asignar :");
-        paraEditorial=leer.next();
+        paraEditorial = leer.next();
         EditorialServicios asistencia = new EditorialServicios();
         Editorial verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
-        if (verifica==null) {
+        if (verifica == null) {
             System.out.println("No encontrado. Se creará uno.");
             asistencia.crearEditorial();
             verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
@@ -130,12 +130,5 @@ public class LibroServicios {
         }
         return libro;
     }
-    
-    
-    public List<Libro> listarEditoriales() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        TypedQuery<Libro> query = em.createQuery("SELECT l FROM Libro l", Libro.class);
-        return query.getResultList();
-    }
+
 }

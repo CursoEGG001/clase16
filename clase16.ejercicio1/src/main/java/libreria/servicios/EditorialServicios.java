@@ -79,4 +79,5 @@ public class EditorialServicios {
         TypedQuery<Editorial> query = em.createQuery("SELECT ed FROM Editorial ed", Editorial.class);
         return query.getResultList();
     }
+    
 }
