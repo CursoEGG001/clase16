@@ -24,23 +24,27 @@ public class LibroServicios {
     Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
 
     public void crearLibro() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        var libro = new Libro();
-        System.out.println("Ingrese el numero de ISBN del Libro: ");
-        libro.setIsbn(leer.nextLong());
-        System.out.println("Ingrese el título del Libro: ");
-        libro.setTitulo(leer.next());
-        System.out.println("Ingrese el año de publicación: ");
-        libro.setAnio(leer.nextInt());
-        System.out.println("Ingrese el autor: ");
-        ponerAutor(libro);
-        System.out.println("Ingrese la editorial : ");
-        ponerEditorial(libro);
-        libro.setAlta(Boolean.TRUE);
-        em.getTransaction().begin();
-        em.persist(libro);
-        em.getTransaction().commit();
+        try {
+            String persistenceUnitName = "com.egg.alumno_PU";
+            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+            var libro = new Libro();
+            System.out.println("Ingrese el numero de ISBN del Libro: ");
+            libro.setIsbn(leer.nextLong());
+            System.out.println("Ingrese el título del Libro: ");
+            libro.setTitulo(leer.next());
+            System.out.println("Ingrese el año de publicación: ");
+            libro.setAnio(leer.nextInt());
+            System.out.println("Ingrese el autor: ");
+            ponerAutor(libro);
+            System.out.println("Ingrese la editorial : ");
+            ponerEditorial(libro);
+            libro.setAlta(Boolean.TRUE);
+            em.getTransaction().begin();
+            em.persist(libro);
+            em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            System.out.println("Error en creación de la entidad : " + e.getMessage());
+        }
     }
 
     public Libro buscarLibro() {
@@ -102,46 +106,54 @@ public class LibroServicios {
     }
 
     private Libro ponerAutor(Libro libro) {
-        AutorServicios asistencia = new AutorServicios();
+        try {
+            AutorServicios asistencia = new AutorServicios();
 
-        System.out.println("Ingrese el autor a asignar :");
-        String paraAutor = leer.next();
+            System.out.println("Ingrese el autor a asignar :");
+            String paraAutor = leer.next();
 
-        List<Autor> verifica = asistencia.buscarPorAutor(paraAutor);
-        if (verifica.isEmpty()) {
-            System.out.println("No encontrado. Se creará uno.");
-            asistencia.crearAutor();
-            verifica = asistencia.buscarPorAutor(paraAutor);
+            List<Autor> verifica = asistencia.buscarPorAutor(paraAutor);
+            if (verifica.isEmpty()) {
+                System.out.println("No encontrado. Se creará uno.");
+                asistencia.crearAutor();
+                verifica = asistencia.buscarPorAutor(paraAutor);
 
-            libro.setAutor(verifica.get(0));
-        } else {
-            for (Autor asignado : verifica) {
-                System.out.println("¿Desea asignar " + asignado.getNombre() + " ? (S/N)");
-                String duda = leer.next();
-                if (duda.equalsIgnoreCase("s")) {
-                    libro.setAutor(asignado);
-                    break;
+                libro.setAutor(verifica.get(0));
+            } else {
+                for (Autor asignado : verifica) {
+                    System.out.println("¿Desea asignar " + asignado.getNombre() + " ? (S/N)");
+                    String duda = leer.next();
+                    if (duda.equalsIgnoreCase("s")) {
+                        libro.setAutor(asignado);
+                        break;
+                    }
                 }
             }
+        } catch (PersistenceException e) {
+            System.out.println("Error al poner Autor:" + e.getMessage());
         }
         return libro;
 
     }
 
     private Libro ponerEditorial(Libro libro) {
-        String paraEditorial = "";
-        System.out.println("Ingrese el editor a asignar :");
-        paraEditorial = leer.next();
-        EditorialServicios asistencia = new EditorialServicios();
-        Editorial verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
-        if (verifica == null) {
-            System.out.println("No encontrado. Se creará uno.");
-            asistencia.crearEditorial();
-            verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
+        try {
+            String paraEditorial = "";
+            System.out.println("Ingrese el editor a asignar :");
+            paraEditorial = leer.next();
+            EditorialServicios asistencia = new EditorialServicios();
+            Editorial verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
+            if (verifica == null) {
+                System.out.println("No encontrado. Se creará uno.");
+                asistencia.crearEditorial();
+                verifica = asistencia.buscarEditorialPorNombre(paraEditorial);
 
-            libro.setEditorial(verifica);
-        } else {
-            libro.setEditorial(verifica);
+                libro.setEditorial(verifica);
+            } else {
+                libro.setEditorial(verifica);
+            }
+        } catch (PersistenceException e) {
+            System.out.println("Error al poner editorial:" + e.getMessage());
         }
         return libro;
     }
