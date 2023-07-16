@@ -4,10 +4,12 @@
  */
 package libreria.servicios;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import libreria.entidades.Autor;
 
@@ -20,17 +22,21 @@ public class AutorServicios {
     Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
 
     public void crearAutor() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        var autor = new Autor();
+        try {
+            String persistenceUnitName = "com.egg.alumno_PU";
+            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+            var autor = new Autor();
 //        System.out.println("Ingrese el numero de id del autor: ");
 //        autor.setId(leer.nextLong());
-        System.out.println("Ingrese el nombre del Autor");
-        autor.setNombre(leer.next());
-        autor.setAlta(Boolean.TRUE);
-        em.getTransaction().begin();
-        em.persist(autor);
-        em.getTransaction().commit();
+            System.out.println("Ingrese el nombre del Autor");
+            autor.setNombre(leer.next());
+            autor.setAlta(Boolean.TRUE);
+            em.getTransaction().begin();
+            em.persist(autor);
+            em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            System.out.println("Entidad inválida: " + e.getMessage());
+        }
     }
 
     public Autor buscarAutor() {
@@ -53,14 +59,19 @@ public class AutorServicios {
     }
 
     public Autor modificarAutor() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        Autor modificado = buscarAutor();
-        System.out.println("Ingrese el nuevo nombre del autor: ");
-        modificado.setNombre(leer.next());
-        em.getTransaction().begin();
-        em.merge(modificado);
-        em.getTransaction().commit();
+        Autor modificado = null;
+        try {
+            String persistenceUnitName = "com.egg.alumno_PU";
+            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+            modificado = buscarAutor();
+            System.out.println("Ingrese el nuevo nombre del autor: ");
+            modificado.setNombre(leer.next());
+            em.getTransaction().begin();
+            em.merge(modificado);
+            em.getTransaction().commit();
+        } catch (PersistenceException | InputMismatchException e) {
+            System.out.println("Entrada incorrecta:" + e.getMessage());
+        }
         return modificado;
     }
 
@@ -75,8 +86,7 @@ public class AutorServicios {
         System.out.println("Baja del autor realizada con éxito");
 
     }
-    
-    
+
     public List<Autor> listarAutores() {
         String persistenceUnitName = "com.egg.alumno_PU";
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();

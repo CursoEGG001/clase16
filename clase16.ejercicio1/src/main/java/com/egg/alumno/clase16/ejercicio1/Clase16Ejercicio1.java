@@ -73,31 +73,10 @@ public class Clase16Ejercicio1 {
                 case 5:
                     // Create a book
                     System.out.println("{[Create un Libro]}");
-
                     lb.crearLibro();
                     break;
                 case 6:
-                    // Search for a book
-                    System.out.println("{[Buscate un Libro]}");
-                    System.out.println("-1. Buscar por ISBN");
-                    System.out.println("-2. Buscar por Nombre");
-                    int criterio = leer.nextInt();
-
-                    switch (criterio) {
-                        case 1:
-                            System.out.println("Escriba el ISBN del Libro :");
-                            System.out.println(lb.buscarLibro());
-                            break;
-                        case 2:
-                            System.out.println("Escriba un nombre de libro :");
-                            String paraBuscar = leer.next();
-
-                            System.out.println(lb.buscarLibroPorNombre(paraBuscar));
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-
+                    MenuBuscaLibro(leer, lb);
                     break;
                 case 7:
                     // Delete a book
@@ -115,10 +94,7 @@ public class Clase16Ejercicio1 {
                     ed.crearEditorial();
                     break;
                 case 10:
-                    // Search for an editorial
-                    System.out.println("{[Buscate un Editorial]}");
-                    System.out.println("¿Qué desea buscar?");
-                    System.out.println(ed.buscarEditorialPorNombre(leer.next()));
+                    MenuBuscarEditoriales(leer, ed, lb);
                     break;
                 case 11:
                     // Delete an editorial
@@ -131,27 +107,13 @@ public class Clase16Ejercicio1 {
                     ed.modificarEditorial(ed.buscarEditorialPorNombre(leer.next()));
                     break;
                 case 13:
-                    System.out.println("Lista de Autores:\n\n");
-                    for (Autor losAutores : au.listarAutores()) {
-                        System.out.println(losAutores.getNombre());
-                    }
+                    menuMuestraAutores(au);
                     break;
                 case 14:
-                    System.out.println("Lista de Libros:\n\n");
-                    for (Libro listarLibro : lb.listarLibros()) {
-                        System.out.println(listarLibro.getTitulo()
-                                + " , " + listarLibro.getAutor()
-                                + " , " + listarLibro.getAnio()
-                                + "\n\t" + listarLibro.getEditorial()
-                                + "\tPr.: " + listarLibro.getEjemplaresPrestados()
-                                + "\t N°EJ: " + listarLibro.getEjemplares());
-                    }
+                    menuMuestraLibros(lb);
                     break;
                 case 15:
-                    System.out.println("Lista de Editoriales");
-                    for (Editorial laEditorial : ed.listarEditoriales()) {
-                        System.out.println("Ed. " + laEditorial.getNombre());
-                    }
+                    menuMuestraEditoriales(ed);
                     break;
                 case 0:
                     // Exit
@@ -163,5 +125,99 @@ public class Clase16Ejercicio1 {
 
         System.out.println("-----------------------------------");
 
+    }
+
+    private static void MenuBuscarEditoriales(Scanner leer, EditorialServicios ed, LibroServicios lb) throws AssertionError {
+        // Search for an editorial
+        System.out.println("{[Buscate un Editorial]}");
+        System.out.println("¿Qué desea buscar?");
+        System.out.println("-1. Busca una Editorial");
+        System.out.println("-2. Libros de una Editorial");
+        System.out.println("Elija una opción");
+        
+        int criterio = leer.nextInt();
+        switch (criterio) {
+            case 1:
+                System.out.println(ed.buscarEditorialPorNombre(leer.next()));
+                break;
+            case 2:
+                System.out.println("Ingrese la editorial a mostrar:");
+                String aBuscar = leer.next();
+                for (Libro susLibros : lb.listarLibros()) {
+                    for (Editorial deEditorial : ed.listarEditoriales()) {
+                        if (susLibros.getEditorial().getNombre().contains(aBuscar) && deEditorial.getNombre().contains(aBuscar)) {
+                            System.out.println("Ed. : " + deEditorial.getNombre() + ", " + susLibros.getTitulo() + " (" + susLibros.getIsbn() + ") ");
+                        }
+                    }
+                    
+                }
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    private static void menuMuestraEditoriales(EditorialServicios ed) {
+        System.out.println("Lista de Editoriales");
+        for (Editorial laEditorial : ed.listarEditoriales()) {
+            System.out.println("Ed. " + laEditorial.getNombre());
+        }
+    }
+
+    private static void menuMuestraLibros(LibroServicios lb) {
+        System.out.println("Lista de Libros:\n\n");
+        for (Libro listarLibro : lb.listarLibros()) {
+            System.out.println("(" + listarLibro.getIsbn() + ")" + listarLibro.getTitulo()
+                    + " , " + listarLibro.getAutor()
+                    + " , " + listarLibro.getAnio()
+                    + "\n\t" + listarLibro.getEditorial()
+                    + "\tPr.: " + listarLibro.getEjemplaresPrestados()
+                    + "\t N°EJ: " + listarLibro.getEjemplares());
+        }
+    }
+
+    private static void menuMuestraAutores(AutorServicios au) {
+        System.out.println("Lista de Autores:\n\n");
+        for (Autor losAutores : au.listarAutores()) {
+            System.out.println(losAutores.getNombre() + "\t[" + losAutores.getId() + "]");
+        }
+        return;
+    }
+
+    private static void MenuBuscaLibro(Scanner leer, LibroServicios lb) throws AssertionError {
+        // Search for a book
+        System.out.println("{[Buscate un Libro]}");
+        System.out.println("-1. Buscar por ISBN");
+        System.out.println("-2. Buscar por Nombre");
+        System.out.println("-3. Buscar por Autor");
+        int criterio = leer.nextInt();
+
+        switch (criterio) {
+            case 1:
+                System.out.println("Escriba el ISBN del Libro :");
+                System.out.println(lb.buscarLibro());
+                break;
+            case 2:
+                System.out.println("Escriba un nombre de libro :");
+                String paraBuscar = leer.next();
+
+                System.out.println(lb.buscarLibroPorNombre(paraBuscar));
+                break;
+            case 3:
+                for (Libro filtroLibro : lb.listarLibros()) {
+                    System.out.print("Ingrese un Autor para buscar: ");
+                    Autor delFiltro = filtroLibro.getAutor();
+                    if (filtroLibro.getAutor().getAlta() && delFiltro.getNombre().contains((leer.next()))) {
+                        System.out.println("Autor: "
+                                + delFiltro.getNombre() + "\t("
+                                + delFiltro.getId()
+                                + ") ,Libro: "
+                                + filtroLibro.getTitulo());
+                    }
+                }
+                break;
+            default:
+                throw new AssertionError();
+        }
     }
 }

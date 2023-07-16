@@ -4,10 +4,12 @@
  */
 package libreria.servicios;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import libreria.entidades.Autor;
 import libreria.entidades.Editorial;
@@ -50,14 +52,25 @@ public class LibroServicios {
     }
 
     public Libro modificarLibro() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        Libro modificado = buscarLibro();
-        System.out.println("Ingrese el nuevo Titulo: ");
-        modificado.setTitulo(leer.next());
-        em.getTransaction().begin();
-        em.merge(modificado);
-        em.getTransaction().commit();
+        Libro modificado = null;
+        try {
+            String persistenceUnitName = "com.egg.alumno_PU";
+            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+            modificado = buscarLibro();
+            System.out.println("Ingrese el nuevo Titulo: ");
+            modificado.setTitulo(leer.next());
+            System.out.println("Ingrese Cantidada de Ejemplares Registrados: ");
+            modificado.setEjemplares(leer.nextInt());
+            System.out.println("Ingrese Ejemplares en Prestamo: ");
+            modificado.setEjemplaresPrestados(leer.nextInt());
+            System.out.println("Ingrese Ejemplares Restantes: ");
+            modificado.setEjemplaresRestantes(leer.nextInt());
+            em.getTransaction().begin();
+            em.merge(modificado);
+            em.getTransaction().commit();
+        } catch (PersistenceException | InputMismatchException e) {
+            System.out.println("Entrada inválida : " + e.getMessage());
+        }
         return modificado;
     }
 
@@ -89,9 +102,11 @@ public class LibroServicios {
     }
 
     private Libro ponerAutor(Libro libro) {
-        String paraAutor = "";
-        System.out.println("Ingrese el autor a asignar :");
         AutorServicios asistencia = new AutorServicios();
+
+        System.out.println("Ingrese el autor a asignar :");
+        String paraAutor = leer.next();
+
         List<Autor> verifica = asistencia.buscarPorAutor(paraAutor);
         if (verifica.isEmpty()) {
             System.out.println("No encontrado. Se creará uno.");

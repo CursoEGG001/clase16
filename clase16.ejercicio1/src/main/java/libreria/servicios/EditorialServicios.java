@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import libreria.entidades.Editorial;
 
@@ -20,17 +21,21 @@ public class EditorialServicios {
     Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
 
     public void crearEditorial() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        var editor = new Editorial();
-        System.out.println("Ingrese el numero de id del editor: ");
-        editor.setId(leer.nextLong());
-        System.out.println("Ingrese el nombre del editor");
-        editor.setNombre(leer.next());
-        editor.setAlta(Boolean.TRUE);
-        em.getTransaction().begin();
-        em.persist(editor);
-        em.getTransaction().commit();
+        try {
+            String persistenceUnitName = "com.egg.alumno_PU";
+            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+            var editor = new Editorial();
+            System.out.println("Ingrese el numero de id del editor: ");
+            editor.setId(leer.nextLong());
+            System.out.println("Ingrese el nombre del editor");
+            editor.setNombre(leer.next());
+            editor.setAlta(Boolean.TRUE);
+            em.getTransaction().begin();
+            em.persist(editor);
+            em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            System.out.println("Edición Invalida : " + e.getMessage());
+        }
     }
 
     public Editorial buscarEditorial(Long Id) {
@@ -79,5 +84,5 @@ public class EditorialServicios {
         TypedQuery<Editorial> query = em.createQuery("SELECT ed FROM Editorial ed", Editorial.class);
         return query.getResultList();
     }
-    
+
 }
