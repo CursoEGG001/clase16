@@ -433,6 +433,7 @@ public class Clase16Eextra1 {
 
         System.out.print("Ingrese el ISBN del libro: ");
         Long isbn = scanner.nextLong();
+        scanner.nextLine();
 
         System.out.print("Ingrese el título del libro: ");
         String titulo = scanner.nextLine();
@@ -473,6 +474,7 @@ public class Clase16Eextra1 {
                 libroController.create(libro);
                 System.out.println("Libro creado correctamente.");
             } catch (Exception ex) {
+                System.out.println("No se pudo crear.");
                 throw ex;
             }
         } else {
