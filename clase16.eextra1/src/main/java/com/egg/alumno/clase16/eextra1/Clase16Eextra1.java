@@ -48,15 +48,7 @@ public class Clase16Eextra1 {
 
         while (!salir) {
             try {
-                System.out.println("Menú Principal:");
-                System.out.println("1) Autores");
-                System.out.println("2) Editoriales");
-                System.out.println("3) Libros");
-                System.out.println("4) Préstamos");
-                System.out.println("5) Clientes");
-                System.out.println("6) Salir");
-                
-                System.out.print("Seleccione una opción: ");
+                PresentaMenuPrincipal();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
                 
@@ -90,21 +82,25 @@ public class Clase16Eextra1 {
         }
     }
 
+    private void PresentaMenuPrincipal() {
+        System.out.println("Menú Principal:");
+        System.out.println("1) Autores");
+        System.out.println("2) Editoriales");
+        System.out.println("3) Libros");
+        System.out.println("4) Préstamos");
+        System.out.println("5) Clientes");
+        System.out.println("6) Salir");
+        
+        System.out.print("Seleccione una opción: ");
+    }
+
     private void menuAutores() throws Exception {
         Scanner scanner = new Scanner(System.in);
         boolean salir = false;
 
         while (!salir) {
             try {
-                System.out.println("Menú de Autores:");
-                System.out.println("1) Crear Autor");
-                System.out.println("2) Buscar Autor");
-                System.out.println("3) Listar Autores");
-                System.out.println("4) Actualizar Autor");
-                System.out.println("5) Eliminar Autor");
-                System.out.println("6) Volver");
-                
-                System.out.print("Seleccione una opción: ");
+                presentaMenuAutor();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
                 
@@ -138,6 +134,18 @@ public class Clase16Eextra1 {
                 throw ex;
             }
         }
+    }
+
+    private void presentaMenuAutor() {
+        System.out.println("Menú de Autores:");
+        System.out.println("1) Crear Autor");
+        System.out.println("2) Buscar Autor");
+        System.out.println("3) Listar Autores");
+        System.out.println("4) Actualizar Autor");
+        System.out.println("5) Eliminar Autor");
+        System.out.println("6) Volver");
+        
+        System.out.print("Seleccione una opción: ");
     }
 
     private void crearAutor() {
@@ -240,15 +248,7 @@ public class Clase16Eextra1 {
 
         while (!salir) {
             try {
-                System.out.println("Menú de Editoriales:");
-                System.out.println("1) Crear Editorial");
-                System.out.println("2) Buscar Editorial");
-                System.out.println("3) Listar Editoriales");
-                System.out.println("4) Actualizar Editorial");
-                System.out.println("5) Eliminar Editorial");
-                System.out.println("6) Volver");
-                
-                System.out.print("Seleccione una opción: ");
+                PresentaMenuEditoriales();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
                 
@@ -282,6 +282,18 @@ public class Clase16Eextra1 {
                throw ex;
             }
         }
+    }
+
+    private void PresentaMenuEditoriales() {
+        System.out.println("Menú de Editoriales:");
+        System.out.println("1) Crear Editorial");
+        System.out.println("2) Buscar Editorial");
+        System.out.println("3) Listar Editoriales");
+        System.out.println("4) Actualizar Editorial");
+        System.out.println("5) Eliminar Editorial");
+        System.out.println("6) Volver");
+        
+        System.out.print("Seleccione una opción: ");
     }
 
     private void crearEditorial() {
@@ -384,15 +396,7 @@ public class Clase16Eextra1 {
 
         while (!salir) {
             try {
-                System.out.println("Menú de Libros:");
-                System.out.println("1) Crear Libro");
-                System.out.println("2) Buscar Libro");
-                System.out.println("3) Listar Libros");
-                System.out.println("4) Actualizar Libro");
-                System.out.println("5) Eliminar Libro");
-                System.out.println("6) Volver");
-                
-                System.out.print("Seleccione una opción: ");
+                PresentaMenuLibros();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
                 
@@ -426,6 +430,18 @@ public class Clase16Eextra1 {
                 throw ex;
             }
         }
+    }
+
+    private void PresentaMenuLibros() {
+        System.out.println("Menú de Libros:");
+        System.out.println("1) Crear Libro");
+        System.out.println("2) Buscar Libro");
+        System.out.println("3) Listar Libros");
+        System.out.println("4) Actualizar Libro");
+        System.out.println("5) Eliminar Libro");
+        System.out.println("6) Volver");
+        
+        System.out.print("Seleccione una opción: ");
     }
 
     private void crearLibro() throws Exception {
@@ -582,15 +598,7 @@ public class Clase16Eextra1 {
 
         while (!salir) {
             try {
-                System.out.println("Menú de Préstamos:");
-                System.out.println("1) Crear Préstamo");
-                System.out.println("2) Buscar Préstamo");
-                System.out.println("3) Listar Préstamos");
-                System.out.println("4) Actualizar Préstamo");
-                System.out.println("5) Eliminar Préstamo");
-                System.out.println("6) Volver");
-                
-                System.out.print("Seleccione una opción: ");
+                PresentaMenuPrestamo();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
                 
@@ -624,6 +632,18 @@ public class Clase16Eextra1 {
                 System.out.println("Error inesperado : " + ex.getMessage());
             }
         }
+    }
+
+    private void PresentaMenuPrestamo() {
+        System.out.println("Menú de Préstamos:");
+        System.out.println("1) Crear Préstamo");
+        System.out.println("2) Buscar Préstamo");
+        System.out.println("3) Listar Préstamos");
+        System.out.println("4) Actualizar Préstamo");
+        System.out.println("5) Eliminar Préstamo");
+        System.out.println("6) Volver");
+        
+        System.out.print("Seleccione una opción: ");
     }
 
     private void crearPrestamo() throws Exception {
@@ -761,15 +781,7 @@ public class Clase16Eextra1 {
 
         while (!salir) {
             try {
-                System.out.println("Menú de Clientes:");
-                System.out.println("1) Crear Cliente");
-                System.out.println("2) Buscar Cliente");
-                System.out.println("3) Listar Clientes");
-                System.out.println("4) Actualizar Cliente");
-                System.out.println("5) Eliminar Cliente");
-                System.out.println("6) Volver");
-                
-                System.out.print("Seleccione una opción: ");
+                PresentaMenuClientes();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
                 
@@ -805,11 +817,24 @@ public class Clase16Eextra1 {
         }
     }
 
+    private void PresentaMenuClientes() {
+        System.out.println("Menú de Clientes:");
+        System.out.println("1) Crear Cliente");
+        System.out.println("2) Buscar Cliente");
+        System.out.println("3) Listar Clientes");
+        System.out.println("4) Actualizar Cliente");
+        System.out.println("5) Eliminar Cliente");
+        System.out.println("6) Volver");
+        
+        System.out.print("Seleccione una opción: ");
+    }
+
     private void crearCliente() {
         Scanner dato = new Scanner(System.in);
 
         System.out.print("Ingrese el documento del cliente: ");
         Long documento = dato.nextLong();
+        dato.nextLine();
 
         System.out.print("Ingrese el nombre del cliente: ");
         String nombre = dato.nextLine();
@@ -883,6 +908,7 @@ public class Clase16Eextra1 {
             try {
                 System.out.print("Ingrese el nuevo documento del cliente: ");
                 Long documento = dato.nextLong();
+                dato.nextLine();
                 
                 System.out.print("Ingrese el nuevo nombre del cliente: ");
                 String nombre = dato.nextLine();

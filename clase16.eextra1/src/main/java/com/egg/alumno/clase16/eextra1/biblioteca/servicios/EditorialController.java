@@ -60,7 +60,7 @@ public class EditorialController implements Serializable {
             if (msg == null || msg.length() == 0) {
                 Long id = editorial.getId();
                 if (findEditorial(id) == null) {
-                    throw new NonexistentEntityException("The editorial with id " + id + " no longer exists.");
+                    throw new NonexistentEntityException("La Editorial con id " + id + " no existe más.");
                 }
             }
             throw ex;
@@ -81,7 +81,7 @@ public class EditorialController implements Serializable {
                 editorial = em.getReference(Editorial.class, id);
                 editorial.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The editorial with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("La editorial con id " + id + " no existe más.", enfe);
             }
             em.remove(editorial);
             em.getTransaction().commit();

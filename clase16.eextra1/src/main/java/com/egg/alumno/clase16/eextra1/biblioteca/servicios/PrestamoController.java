@@ -60,7 +60,7 @@ public class PrestamoController implements Serializable {
             if (msg == null || msg.length() == 0) {
                 Long id = prestamo.getId();
                 if (findPrestamo(id) == null) {
-                    throw new NonexistentEntityException("The prestamo with id " + id + " no longer exists.");
+                    throw new NonexistentEntityException("El prestamo id " + id + " no existe más.");
                 }
             }
             throw ex;
@@ -81,7 +81,7 @@ public class PrestamoController implements Serializable {
                 prestamo = em.getReference(Prestamo.class, id);
                 prestamo.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The prestamo with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("El prestamo con id " + id + " no existe más.", enfe);
             }
             em.remove(prestamo);
             em.getTransaction().commit();

@@ -60,7 +60,7 @@ public class ClienteController implements Serializable {
             if (msg == null || msg.length() == 0) {
                 Long id = cliente.getId();
                 if (findCliente(id) == null) {
-                    throw new NonexistentEntityException("The cliente with id " + id + " no longer exists.");
+                    throw new NonexistentEntityException("El cliente con id " + id + " no existe más.");
                 }
             }
             throw ex;
@@ -81,7 +81,7 @@ public class ClienteController implements Serializable {
                 cliente = em.getReference(Cliente.class, id);
                 cliente.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The cliente with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("El cliente de id " + id + " no existe más.", enfe);
             }
             em.remove(cliente);
             em.getTransaction().commit();
