@@ -1,7 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.egg.alumno.clase16.eextra1;
 
 import com.egg.alumno.clase16.eextra1.biblioteca.entidades.Autor;
@@ -26,7 +25,6 @@ import java.util.Scanner;
  */
 public class Clase16Eextra1 {
 
-
     private AutorController autorController;
     private EditorialController editorialController;
     private LibroController libroController;
@@ -34,7 +32,7 @@ public class Clase16Eextra1 {
     private ClienteController clienteController;
 
     public Clase16Eextra1() {
-    
+
         autorController = new AutorController();
         editorialController = new EditorialController();
         libroController = new LibroController();
@@ -51,7 +49,7 @@ public class Clase16Eextra1 {
                 PresentaMenuPrincipal();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 switch (opcion) {
                     case 1:
                         menuAutores();
@@ -90,7 +88,7 @@ public class Clase16Eextra1 {
         System.out.println("4) Préstamos");
         System.out.println("5) Clientes");
         System.out.println("6) Salir");
-        
+
         System.out.print("Seleccione una opción: ");
     }
 
@@ -103,7 +101,7 @@ public class Clase16Eextra1 {
                 presentaMenuAutor();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 switch (opcion) {
                     case 1:
                         crearAutor();
@@ -129,7 +127,7 @@ public class Clase16Eextra1 {
                 }
                 System.out.println();
             } catch (NonexistentEntityException ex) {
-               throw ex;
+                throw ex;
             } catch (Exception ex) {
                 throw ex;
             }
@@ -144,7 +142,7 @@ public class Clase16Eextra1 {
         System.out.println("4) Actualizar Autor");
         System.out.println("5) Eliminar Autor");
         System.out.println("6) Volver");
-        
+
         System.out.print("Seleccione una opción: ");
     }
 
@@ -211,10 +209,10 @@ public class Clase16Eextra1 {
             try {
                 System.out.print("Ingrese el nuevo nombre del autor: ");
                 String nombre = scanner.nextLine();
-                
+
                 // Actualizar los datos del autor
                 autor.setNombre(nombre);
-                
+
                 // Llamar al controlador de Autores para actualizar el autor en la base de datos
                 autorController.edit(autor);
                 System.out.println("Autor actualizado correctamente.");
@@ -229,11 +227,11 @@ public class Clase16Eextra1 {
     private void eliminarAutor() throws NonexistentEntityException {
         try {
             Scanner scanner = new Scanner(System.in);
-            
+
             System.out.print("Ingrese el ID del autor: ");
             Long id = scanner.nextLong();
             scanner.nextLine();
-            
+
             // Llamar al controlador de Autores para eliminar el autor por su ID
             autorController.destroy(id);
             System.out.println("Autor eliminado correctamente.");
@@ -251,7 +249,7 @@ public class Clase16Eextra1 {
                 PresentaMenuEditoriales();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 switch (opcion) {
                     case 1:
                         crearEditorial();
@@ -279,7 +277,7 @@ public class Clase16Eextra1 {
             } catch (NonexistentEntityException ex) {
                 throw ex;
             } catch (Exception ex) {
-               throw ex;
+                throw ex;
             }
         }
     }
@@ -292,7 +290,7 @@ public class Clase16Eextra1 {
         System.out.println("4) Actualizar Editorial");
         System.out.println("5) Eliminar Editorial");
         System.out.println("6) Volver");
-        
+
         System.out.print("Seleccione una opción: ");
     }
 
@@ -359,10 +357,10 @@ public class Clase16Eextra1 {
             try {
                 System.out.print("Ingrese el nuevo nombre de la editorial: ");
                 String nombre = scanner.nextLine();
-                
+
                 // Actualizar los datos de la editorial
                 editorial.setNombre(nombre);
-                
+
                 // Llamar al controlador de Editoriales para actualizar la editorial en la base de datos
                 editorialController.edit(editorial);
                 System.out.println("Editorial actualizada correctamente.");
@@ -377,11 +375,11 @@ public class Clase16Eextra1 {
     private void eliminarEditorial() throws NonexistentEntityException {
         try {
             Scanner scanner = new Scanner(System.in);
-            
+
             System.out.print("Ingrese el ID de la editorial: ");
             Long id = scanner.nextLong();
             scanner.nextLine();
-            
+
             // Llamar al controlador de Editoriales para eliminar la editorial por su ID
             editorialController.destroy(id);
             System.out.println("Editorial eliminada correctamente.");
@@ -399,7 +397,7 @@ public class Clase16Eextra1 {
                 PresentaMenuLibros();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 switch (opcion) {
                     case 1:
                         crearLibro();
@@ -440,7 +438,7 @@ public class Clase16Eextra1 {
         System.out.println("4) Actualizar Libro");
         System.out.println("5) Eliminar Libro");
         System.out.println("6) Volver");
-        
+
         System.out.print("Seleccione una opción: ");
     }
 
@@ -483,9 +481,11 @@ public class Clase16Eextra1 {
                 libro.setAnio(anio);
                 libro.setEjemplares(ejemplares);
                 libro.setEjemplaresRestantes(ejemplares);
+                libro.setEjemplaresPrestados(0);
                 libro.setAutor(autor);
                 libro.setEditorial(editorial);
-                
+                libro.setAlta(Boolean.TRUE);
+
                 // Llamar al controlador de Libros para crear el libro en la base de datos
                 libroController.create(libro);
                 System.out.println("Libro creado correctamente.");
@@ -551,21 +551,21 @@ public class Clase16Eextra1 {
             try {
                 System.out.print("Ingrese el nuevo título del libro: ");
                 String titulo = scanner.nextLine();
-                
+
                 System.out.print("Ingrese el nuevo año de publicación del libro: ");
                 int anio = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 System.out.print("Ingrese la nueva cantidad total de ejemplares del libro: ");
                 int ejemplares = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 // Actualizar los datos del libro
                 libro.setTitulo(titulo);
                 libro.setAnio(anio);
                 libro.setEjemplares(ejemplares);
                 libro.setEjemplaresRestantes(ejemplares);
-                
+
                 // Llamar al controlador de Libros para actualizar el libro en la base de datos
                 libroController.edit(libro);
                 System.out.println("Libro actualizado correctamente.");
@@ -580,10 +580,10 @@ public class Clase16Eextra1 {
     private void eliminarLibro() throws NonexistentEntityException {
         try {
             Scanner scanner = new Scanner(System.in);
-            
+
             System.out.print("Ingrese el ISBN del libro: ");
             Long isbn = scanner.nextLong();
-            
+
             // Llamar al controlador de Libros para eliminar el libro por su ISBN
             libroController.destroy(isbn);
             System.out.println("Libro eliminado correctamente.");
@@ -601,7 +601,7 @@ public class Clase16Eextra1 {
                 PresentaMenuPrestamo();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 switch (opcion) {
                     case 1:
                         crearPrestamo();
@@ -642,24 +642,24 @@ public class Clase16Eextra1 {
         System.out.println("4) Actualizar Préstamo");
         System.out.println("5) Eliminar Préstamo");
         System.out.println("6) Volver");
-        
+
         System.out.print("Seleccione una opción: ");
     }
 
     private void crearPrestamo() throws Exception {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Ingrese el ID del libro a prestar: ");
+        // Obtener el libro y el cliente correspondientes a los IDs ingresados
+        System.out.print("Ingrese el ISBN del libro a prestar: ");
         Long libroId = scanner.nextLong();
         scanner.nextLine();
+        Libro libro = libroController.findLibro(libroId);
 
+        System.out.println(libro.getTitulo() + ", " + libro.getAutor().getNombre() + " de Ed. " + libro.getEditorial().getNombre());
         System.out.print("Ingrese el ID del cliente: ");
         Long clienteId = scanner.nextLong();
         scanner.nextLine();
-
-        // Obtener el libro y el cliente correspondientes a los IDs ingresados
-        Libro libro = libroController.findLibro(libroId);
         Cliente cliente = clienteController.findCliente(clienteId);
+        System.out.println(cliente.getApellido() + ", " + cliente.getNombre());
 
         if (libro != null && cliente != null) {
             // Verificar si hay ejemplares disponibles para prestar
@@ -669,11 +669,11 @@ public class Clase16Eextra1 {
                     Prestamo prestamo = new Prestamo();
                     prestamo.setLibro(libro);
                     prestamo.setCliente(cliente);
-                    
+
                     // Llamar al controlador de Prestamos para crear el prestamo en la base de datos
                     prestamoController.create(prestamo);
                     System.out.println("Préstamo creado correctamente.");
-                    
+
                     // Actualizar la cantidad de ejemplares prestados y restantes del libro
                     libro.setEjemplaresPrestados(libro.getEjemplaresPrestados() + 1);
                     libro.setEjemplaresRestantes(libro.getEjemplaresRestantes() - 1);
@@ -741,13 +741,13 @@ public class Clase16Eextra1 {
                 System.out.print("Ingrese la nueva fecha de devolución (dd/mm/yyyy): ");
                 String fechaDevolucionStr = scanner.nextLine();
                 // Convertir la cadena de fecha a objeto Date
-                
+
                 Date fechaDevolucion;
                 fechaDevolucion = new SimpleDateFormat("dd/MM/yyyy").parse(fechaDevolucionStr);
 
                 // Actualizar la fecha de devolución del préstamo
                 prestamo.setFechaDevolucion(fechaDevolucion);
-                
+
                 // Llamar al controlador de Prestamos para actualizar el préstamo en la base de datos
                 prestamoController.edit(prestamo);
                 System.out.println("Préstamo actualizado correctamente.");
@@ -762,11 +762,11 @@ public class Clase16Eextra1 {
     private void eliminarPrestamo() throws NonexistentEntityException {
         try {
             Scanner scanner = new Scanner(System.in);
-            
+
             System.out.print("Ingrese el ID del préstamo: ");
             Long id = scanner.nextLong();
             scanner.nextLine();
-            
+
             // Llamar al controlador de Prestamos para eliminar el préstamo por su ID
             prestamoController.destroy(id);
             System.out.println("Préstamo eliminado correctamente.");
@@ -784,7 +784,7 @@ public class Clase16Eextra1 {
                 PresentaMenuClientes();
                 int opcion = scanner.nextInt();
                 scanner.nextLine();
-                
+
                 switch (opcion) {
                     case 1:
                         crearCliente();
@@ -810,7 +810,7 @@ public class Clase16Eextra1 {
                 }
                 System.out.println();
             } catch (NonexistentEntityException ex) {
-                System.out.println("No existente :"+ex.getMessage());
+                System.out.println("No existente :" + ex.getMessage());
             } catch (Exception ex) {
                 System.out.println("Error inesperado : " + ex.getMessage());
             }
@@ -825,7 +825,7 @@ public class Clase16Eextra1 {
         System.out.println("4) Actualizar Cliente");
         System.out.println("5) Eliminar Cliente");
         System.out.println("6) Volver");
-        
+
         System.out.print("Seleccione una opción: ");
     }
 
@@ -909,22 +909,22 @@ public class Clase16Eextra1 {
                 System.out.print("Ingrese el nuevo documento del cliente: ");
                 Long documento = dato.nextLong();
                 dato.nextLine();
-                
+
                 System.out.print("Ingrese el nuevo nombre del cliente: ");
                 String nombre = dato.nextLine();
-                
+
                 System.out.print("Ingrese el nuevo apellido del cliente: ");
                 String apellido = dato.nextLine();
-                
+
                 System.out.print("Ingrese el nuevo teléfono del cliente: ");
                 String telefono = dato.nextLine();
-                
+
                 // Actualizar los datos del cliente
                 cliente.setDocumento(documento);
                 cliente.setNombre(nombre);
                 cliente.setApellido(apellido);
                 cliente.setTelefono(telefono);
-                
+
                 // Llamar al controlador de Clientes para actualizar el cliente en la base de datos
                 clienteController.edit(cliente);
                 System.out.println("Cliente actualizado correctamente.");
@@ -939,11 +939,11 @@ public class Clase16Eextra1 {
     private void eliminarCliente() throws NonexistentEntityException {
         try {
             Scanner dato = new Scanner(System.in);
-            
+
             System.out.print("Ingrese el ID del cliente: ");
             Long id = dato.nextLong();
             dato.nextLine();
-            
+
             // Llamar al controlador de Clientes para eliminar el cliente por su ID
             clienteController.destroy(id);
             System.out.println("Cliente eliminado correctamente.");
@@ -957,7 +957,7 @@ public class Clase16Eextra1 {
             Clase16Eextra1 app = new Clase16Eextra1();
             app.ejecutar();
         } catch (Exception ex) {
-            System.out.println("Imposible iniciar : "+ex.getMessage());
+            System.out.println("Imposible iniciar : " + ex.getMessage());
         }
     }
 }
