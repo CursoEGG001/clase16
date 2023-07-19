@@ -16,6 +16,7 @@ import com.egg.alumno.clase16.eextra1.biblioteca.servicios.PrestamoController;
 import com.egg.alumno.clase16.eextra1.biblioteca.servicios.exceptions.NonexistentEntityException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,11 +26,11 @@ import java.util.Scanner;
  */
 public class Clase16Eextra1 {
 
-    private AutorController autorController;
-    private EditorialController editorialController;
-    private LibroController libroController;
-    private PrestamoController prestamoController;
-    private ClienteController clienteController;
+    private final AutorController autorController;
+    private final EditorialController editorialController;
+    private final LibroController libroController;
+    private final PrestamoController prestamoController;
+    private final ClienteController clienteController;
 
     public Clase16Eextra1() {
 
@@ -199,9 +200,14 @@ public class Clase16Eextra1 {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Ingrese el ID del autor: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
-
+        Long id = null;
+        try {
+            id = scanner.nextLong();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Error en la entrada: " + e.getMessage());
+            scanner.next();
+        }
         // Llamar al controlador de Autores para buscar el autor por su ID
         Autor autor = autorController.findAutor(id);
 
@@ -229,8 +235,14 @@ public class Clase16Eextra1 {
             Scanner scanner = new Scanner(System.in);
 
             System.out.print("Ingrese el ID del autor: ");
-            Long id = scanner.nextLong();
-            scanner.nextLine();
+            Long id = null;
+            try {
+                id = scanner.nextLong();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Error en la entrada: "+e.getMessage());
+                scanner.next();
+            }
 
             // Llamar al controlador de Autores para eliminar el autor por su ID
             autorController.destroy(id);
@@ -499,25 +511,30 @@ public class Clase16Eextra1 {
     }
 
     private void buscarLibro() {
+
         Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Ingrese el ISBN del libro: ");
+            Long isbn = scanner.nextLong();
 
-        System.out.print("Ingrese el ISBN del libro: ");
-        Long isbn = scanner.nextLong();
+            // Llamar al controlador de Libros para buscar el libro por su ISBN
+            Libro libro = libroController.obtenerLibroPorISBN(isbn);
 
-        // Llamar al controlador de Libros para buscar el libro por su ISBN
-        Libro libro = libroController.obtenerLibroPorISBN(isbn);
-
-        if (libro != null) {
-            System.out.println("Libro encontrado:");
-            System.out.println("ISBN: " + libro.getIsbn());
-            System.out.println("Título: " + libro.getTitulo());
-            System.out.println("Año de Publicación: " + libro.getAnio());
-            System.out.println("Ejemplares Prestados: " + libro.getEjemplaresPrestados());
-            System.out.println("Ejemplares Restantes: " + libro.getEjemplaresRestantes());
-            System.out.println("Autor: " + libro.getAutor().getNombre());
-            System.out.println("Editorial: " + libro.getEditorial().getNombre());
-        } else {
-            System.out.println("Libro no encontrado.");
+            if (libro != null) {
+                System.out.println("Libro encontrado:");
+                System.out.println("ISBN: " + libro.getIsbn());
+                System.out.println("Título: " + libro.getTitulo());
+                System.out.println("Año de Publicación: " + libro.getAnio());
+                System.out.println("Ejemplares Prestados: " + libro.getEjemplaresPrestados());
+                System.out.println("Ejemplares Restantes: " + libro.getEjemplaresRestantes());
+                System.out.println("Autor: " + libro.getAutor().getNombre());
+                System.out.println("Editorial: " + libro.getEditorial().getNombre());
+            } else {
+                System.out.println("Libro no encontrado.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Error al ingresar datos");
+            scanner.next();
         }
     }
 
@@ -542,7 +559,13 @@ public class Clase16Eextra1 {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Ingrese el ISBN del libro: ");
-        Long isbn = scanner.nextLong();
+        Long isbn = null;
+        try {
+            isbn = scanner.nextLong();
+        } catch (Exception e) {
+            System.out.println("Error al ingresar datos");
+            scanner.next();
+        }
 
         // Llamar al controlador de Libros para buscar el libro por su ISBN
         Libro libro = libroController.obtenerLibroPorISBN(isbn);
@@ -649,17 +672,24 @@ public class Clase16Eextra1 {
     private void crearPrestamo() throws Exception {
         Scanner scanner = new Scanner(System.in);
         // Obtener el libro y el cliente correspondientes a los IDs ingresados
-        System.out.print("Ingrese el ISBN del libro a prestar: ");
-        Long libroId = scanner.nextLong();
-        scanner.nextLine();
-        Libro libro = libroController.findLibro(libroId);
+        Libro libro = null;
+        Cliente cliente = null;
+        try {
+            System.out.print("Ingrese el ISBN del libro a prestar: ");
+            Long libroId = scanner.nextLong();
+            scanner.nextLine();
+            libro = libroController.findLibro(libroId);
 
-        System.out.println(libro.getTitulo() + ", " + libro.getAutor().getNombre() + " de Ed. " + libro.getEditorial().getNombre());
-        System.out.print("Ingrese el ID del cliente: ");
-        Long clienteId = scanner.nextLong();
-        scanner.nextLine();
-        Cliente cliente = clienteController.findCliente(clienteId);
-        System.out.println(cliente.getApellido() + ", " + cliente.getNombre());
+            System.out.println(libro.getTitulo() + ", " + libro.getAutor().getNombre() + " de Ed. " + libro.getEditorial().getNombre());
+            System.out.print("Ingrese el ID del cliente: ");
+            Long clienteId = scanner.nextLong();
+            scanner.nextLine();
+            cliente = clienteController.findCliente(clienteId);
+            System.out.println(cliente.getApellido() + ", " + cliente.getNombre());
+        } catch (InputMismatchException e) {
+            System.out.println("Error en entrada: " + e.getMessage());
+            scanner.next();
+        }
 
         if (libro != null && cliente != null) {
             // Verificar si hay ejemplares disponibles para prestar
@@ -693,8 +723,14 @@ public class Clase16Eextra1 {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Ingrese el ID del préstamo: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
+        Long id = null;
+        try {
+            id = scanner.nextLong();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Error en entrada: " + e.getMessage());
+            scanner.next();
+        }
 
         // Llamar al controlador de Prestamos para buscar el préstamo por su ID
         Prestamo prestamo = prestamoController.findPrestamo(id);
@@ -730,8 +766,14 @@ public class Clase16Eextra1 {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Ingrese el ID del préstamo: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
+        Long id = null;
+        try {
+            id = scanner.nextLong();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Error en entrada: " + e.getMessage());
+            scanner.next();
+        }
 
         // Llamar al controlador de Prestamos para buscar el préstamo por su ID
         Prestamo prestamo = prestamoController.findPrestamo(id);
@@ -832,18 +874,27 @@ public class Clase16Eextra1 {
     private void crearCliente() {
         Scanner dato = new Scanner(System.in);
 
-        System.out.print("Ingrese el documento del cliente: ");
-        Long documento = dato.nextLong();
-        dato.nextLine();
+        Long documento = null;
+        String nombre = null;
+        String apellido = null;
+        String telefono = null;
+        try {
+            System.out.print("Ingrese el documento del cliente: ");
+            documento = dato.nextLong();
+            dato.nextLine();
 
-        System.out.print("Ingrese el nombre del cliente: ");
-        String nombre = dato.nextLine();
+            System.out.print("Ingrese el nombre del cliente: ");
+            nombre = dato.nextLine();
 
-        System.out.print("Ingrese el apellido del cliente: ");
-        String apellido = dato.nextLine();
+            System.out.print("Ingrese el apellido del cliente: ");
+            apellido = dato.nextLine();
 
-        System.out.print("Ingrese el teléfono del cliente: ");
-        String telefono = dato.nextLine();
+            System.out.print("Ingrese el teléfono del cliente: ");
+            telefono = dato.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+            dato.next();
+        }
 
         // Crear instancia de Cliente y asignarle los valores ingresados
         Cliente cliente = new Cliente();
@@ -860,9 +911,15 @@ public class Clase16Eextra1 {
     private void buscarCliente() {
         Scanner dato = new Scanner(System.in);
 
-        System.out.print("Ingrese el ID del cliente: ");
-        Long id = dato.nextLong();
-        dato.nextLine();
+        Long id = null;
+        try {
+            System.out.print("Ingrese el ID del cliente: ");
+            id = dato.nextLong();
+            dato.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+            dato.next();
+        }
 
         // Llamar al controlador de Clientes para buscar el cliente por su ID
         Cliente cliente = clienteController.findCliente(id);
@@ -897,9 +954,15 @@ public class Clase16Eextra1 {
     private void actualizarCliente() throws Exception {
         Scanner dato = new Scanner(System.in);
 
-        System.out.print("Ingrese el ID del cliente: ");
-        Long id = dato.nextLong();
-        dato.nextLine();
+        Long id = null;
+        try {
+            System.out.print("Ingrese el ID del cliente: ");
+            id = dato.nextLong();
+            dato.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+            dato.next();
+        }
 
         // Llamar al controlador de Clientes para buscar el cliente por su ID
         Cliente cliente = clienteController.findCliente(id);
@@ -929,6 +992,7 @@ public class Clase16Eextra1 {
                 clienteController.edit(cliente);
                 System.out.println("Cliente actualizado correctamente.");
             } catch (Exception ex) {
+                dato.next();
                 throw ex;
             }
         } else {
@@ -947,7 +1011,7 @@ public class Clase16Eextra1 {
             // Llamar al controlador de Clientes para eliminar el cliente por su ID
             clienteController.destroy(id);
             System.out.println("Cliente eliminado correctamente.");
-        } catch (NonexistentEntityException ex) {
+        } catch (InputMismatchException | NonexistentEntityException ex) {
             throw ex;
         }
     }
