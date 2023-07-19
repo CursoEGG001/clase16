@@ -40,21 +40,25 @@ public class EditorialServicios {
     }
 
     public Editorial buscarEditorial(Long Id) {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        Editorial buscado = em.find(Editorial.class, Id);
+
+        Editorial buscado = null;
+        try {
+            buscado = em.find(Editorial.class, Id);
+        } catch (PersistenceException e) {
+            System.out.println("Operación Inválida: " + e.getMessage());
+            em.close();
+        }
         return buscado;
     }
 
     public Editorial buscarEditorialPorNombre(String Nombre) {
-        String persistenceUnitName = "com.egg.alumno_PU";
+
         TypedQuery<Editorial> esBuscado = null;
         try {
-            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
             esBuscado = em.createQuery("SELECT ed FROM Editorial ed WHERE ed.Nombre LIKE :nombre", Editorial.class);
             esBuscado.setParameter("nombre", Nombre);
         } catch (Exception e) {
-            System.out.println("Operación inválida");
+            System.out.println("Operación inválida: " + e.getMessage());
             em.close();
         }
 
@@ -63,30 +67,46 @@ public class EditorialServicios {
 
     public Editorial modificarEditorial(Editorial aCambiar) {
 
-        Editorial modificado = buscarEditorial(aCambiar.getId());
-        System.out.println("Ingrese el nuevo nombre del editor: ");
-        modificado.setNombre(leer.next());
-        em.getTransaction().begin();
-        em.merge(modificado);
-        em.getTransaction().commit();
+        Editorial modificado = null;
+        try {
+            modificado = buscarEditorial(aCambiar.getId());
+            System.out.println("Ingrese el nuevo nombre del editor: ");
+            modificado.setNombre(leer.next());
+            em.getTransaction().begin();
+            em.merge(modificado);
+            em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            System.out.println("Operación Inválida: " + e.getMessage());
+            em.close();
+        }
         return modificado;
     }
 
     public void eliminarEditorial() {
 
-        System.out.println("Ingrese el ID a eliminar");
-        Editorial eliminado = buscarEditorial(leer.nextLong());
-        eliminado.setAlta(Boolean.FALSE);
-        em.getTransaction().begin();
-        em.merge(eliminado); // em.remove(eliminado); va en verdad pero se sugiere usar el alta como seguridad que el dato no se usa.
-        em.getTransaction().commit();
-        System.out.println("Baja del editor realizada con éxito");
+        try {
+            System.out.println("Ingrese el ID a eliminar");
+            Editorial eliminado = buscarEditorial(leer.nextLong());
+            eliminado.setAlta(Boolean.FALSE);
+            em.getTransaction().begin();
+            em.merge(eliminado); // em.remove(eliminado); va en verdad pero se sugiere usar el alta como seguridad que el dato no se usa.
+            em.getTransaction().commit();
+            System.out.println("Baja del editor realizada con éxito");
+        } catch (PersistenceException e) {
+            System.out.println("Operación Inválida: " + e.getMessage());
+            em.close();
+        }
 
     }
 
     public List<Editorial> listarEditoriales() {
 
-        TypedQuery<Editorial> query = em.createQuery("SELECT ed FROM Editorial ed", Editorial.class);
+        TypedQuery<Editorial> query = null;
+        try {
+            query = em.createQuery("SELECT ed FROM Editorial ed", Editorial.class);
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
         return query.getResultList();
     }
 
