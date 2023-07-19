@@ -3,6 +3,7 @@
  */
 package com.egg.alumno.clase16.ejercicio1;
 
+import java.util.List;
 import java.util.Scanner;
 import libreria.entidades.Autor;
 import libreria.entidades.Editorial;
@@ -50,7 +51,11 @@ public class Clase16Ejercicio1 {
                 case 1:
                     // Create an author
                     System.out.println("{[Create un Autor]}");
-                    au.crearAutor();
+                    Autor creado = new Autor();
+                    System.out.println("Ingrese un nombre de autor:");
+                    creado.setNombre(leer.next());
+                    creado.setAlta(Boolean.TRUE);
+                    au.crearAutor(creado);
                     break;
                 case 2:
                     // Search for an author
@@ -63,12 +68,30 @@ public class Clase16Ejercicio1 {
                 case 3:
                     // Delete an author
                     System.out.println("{[Borrate un autor]}");
-                    au.eliminarAutor();
+                    System.out.println("Ingrese un nombre a buscar para eliminar:");
+                    String busqueda = leer.next();
+                    List<Autor> encontrados = au.buscarPorAutor(busqueda);
+                    for (Autor encontrado : encontrados) {
+                        if (encontrado.getNombre().contains(busqueda)) {
+                            au.eliminarAutor(au.buscarAutor(encontrado.getId()));
+                        }
+                    }
+
                     break;
                 case 4:
                     // Modify an author
                     System.out.println("{[Cambiate un Autor]}");
-                    au.modificarAutor();
+                    System.out.println("Ingrese un nombre a buscar para Modificar:");
+                    busqueda = leer.next();
+                    List<Autor> aModificar = au.buscarPorAutor(busqueda);
+                    for (Autor elegido : aModificar) {
+                        if (elegido.getNombre().contains(busqueda)) {
+                            System.out.println("Nombre: "+elegido.getNombre()+ ", "+elegido.getId());
+                        au.modificarAutor(elegido);
+                        }
+                        
+                    }
+                    
                     break;
                 case 5:
                     // Create a book
@@ -134,7 +157,7 @@ public class Clase16Ejercicio1 {
         System.out.println("-1. Busca una Editorial");
         System.out.println("-2. Libros de una Editorial");
         System.out.println("Elija una opción");
-        
+
         int criterio = leer.nextInt();
         switch (criterio) {
             case 1:
@@ -149,7 +172,7 @@ public class Clase16Ejercicio1 {
                             System.out.println("Ed. : " + deEditorial.getNombre() + ", " + susLibros.getTitulo() + " (" + susLibros.getIsbn() + ") ");
                         }
                     }
-                    
+
                 }
                 break;
             default:

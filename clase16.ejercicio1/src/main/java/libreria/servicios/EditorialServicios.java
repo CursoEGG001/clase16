@@ -19,11 +19,12 @@ import libreria.entidades.Editorial;
 public class EditorialServicios {
 
     Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
+    String persistenceUnitName = "com.egg.alumno_PU";
+    EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
 
     public void crearEditorial() {
         try {
-            String persistenceUnitName = "com.egg.alumno_PU";
-            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+
             var editor = new Editorial();
             System.out.println("Ingrese el numero de id del editor: ");
             editor.setId(leer.nextLong());
@@ -47,15 +48,21 @@ public class EditorialServicios {
 
     public Editorial buscarEditorialPorNombre(String Nombre) {
         String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        TypedQuery<Editorial> esBuscado = em.createQuery("SELECT ed FROM Editorial ed WHERE ed.Nombre LIKE :nombre", Editorial.class);
-        esBuscado.setParameter("nombre", Nombre);
+        TypedQuery<Editorial> esBuscado = null;
+        try {
+            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+            esBuscado = em.createQuery("SELECT ed FROM Editorial ed WHERE ed.Nombre LIKE :nombre", Editorial.class);
+            esBuscado.setParameter("nombre", Nombre);
+        } catch (Exception e) {
+            System.out.println("Operación inválida");
+            em.close();
+        }
+
         return esBuscado.getSingleResult();
     }
 
     public Editorial modificarEditorial(Editorial aCambiar) {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+
         Editorial modificado = buscarEditorial(aCambiar.getId());
         System.out.println("Ingrese el nuevo nombre del editor: ");
         modificado.setNombre(leer.next());
@@ -66,8 +73,7 @@ public class EditorialServicios {
     }
 
     public void eliminarEditorial() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+
         System.out.println("Ingrese el ID a eliminar");
         Editorial eliminado = buscarEditorial(leer.nextLong());
         eliminado.setAlta(Boolean.FALSE);
@@ -79,8 +85,7 @@ public class EditorialServicios {
     }
 
     public List<Editorial> listarEditoriales() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+
         TypedQuery<Editorial> query = em.createQuery("SELECT ed FROM Editorial ed", Editorial.class);
         return query.getResultList();
     }

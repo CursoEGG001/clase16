@@ -19,18 +19,13 @@ import libreria.entidades.Autor;
  */
 public class AutorServicios {
 
+    String persistenceUnitName = "com.egg.alumno_PU";
     Scanner leer = new Scanner(System.in, "UTF-8").useDelimiter("\n");
+    EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
 
-    public void crearAutor() {
+    public void crearAutor(Autor autor) {
         try {
-            String persistenceUnitName = "com.egg.alumno_PU";
-            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-            var autor = new Autor();
-//        System.out.println("Ingrese el numero de id del autor: ");
-//        autor.setId(leer.nextLong());
-            System.out.println("Ingrese el nombre del Autor");
-            autor.setNombre(leer.next());
-            autor.setAlta(Boolean.TRUE);
+
             em.getTransaction().begin();
             em.persist(autor);
             em.getTransaction().commit();
@@ -39,31 +34,23 @@ public class AutorServicios {
         }
     }
 
-    public Autor buscarAutor() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        System.out.println("Ingrese el numero de ID del autor que desea encontrar:  ");
-        Autor buscado = em.find(Autor.class, leer.nextLong());
+    public Autor buscarAutor(Long isbn) {
+
+        Autor buscado = em.find(Autor.class, isbn);
         return buscado;
     }
 
     public List<Autor> buscarPorAutor(String nombre) {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        System.out.println("Ingrese el numero de ID del autor que desea encontrar:  ");
-
         List<Autor> busqueda = em.createQuery("SELECT a FROM Autor a WHERE a.Nombre LIKE :nombre")
                 .setParameter("nombre", "%" + nombre + "%")
                 .getResultList();
         return busqueda;
     }
 
-    public Autor modificarAutor() {
+    public Autor modificarAutor(Autor autor) {
         Autor modificado = null;
         try {
-            String persistenceUnitName = "com.egg.alumno_PU";
-            EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-            modificado = buscarAutor();
+            modificado = autor;
             System.out.println("Ingrese el nuevo nombre del autor: ");
             modificado.setNombre(leer.next());
             em.getTransaction().begin();
@@ -75,10 +62,9 @@ public class AutorServicios {
         return modificado;
     }
 
-    public void eliminarAutor() {
-        String persistenceUnitName = "com.egg.alumno_PU";
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
-        Autor eliminado = buscarAutor();
+    public void eliminarAutor(Autor autor) {
+
+        Autor eliminado = buscarAutor(autor.getId());
         eliminado.setAlta(Boolean.FALSE);
         em.getTransaction().begin();
         em.merge(eliminado); // em.remove(eliminado); va en verdad pero se sugiere usar el alta como seguridad que el dato no se usa.

@@ -115,7 +115,7 @@ public class LibroServicios {
             List<Autor> verifica = asistencia.buscarPorAutor(paraAutor);
             if (verifica.isEmpty()) {
                 System.out.println("No encontrado. Se creará uno.");
-                asistencia.crearAutor();
+                asistencia.crearAutor(new Autor());
                 verifica = asistencia.buscarPorAutor(paraAutor);
 
                 libro.setAutor(verifica.get(0));
