@@ -26,6 +26,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -34,6 +36,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -61,6 +64,10 @@ public class DemoPersistence extends Application {
         VBox principio = new VBox();
         Scene escena = new Scene(principio, 640, 400);
         principio.getChildren().add(menuComboBox);
+        menuComboBox.setPadding(new Insets(8));
+        menuComboBox.setPromptText("Elija un menu...");
+        principio.setAlignment(Pos.TOP_CENTER);
+        principio.setPadding(new Insets(4));
 
         menuComboBox.getItems().addAll("Autores", "Editoriales", "Libros", "Prestamos", "Clientes");
         menuComboBox.setOnAction(event -> {
@@ -93,6 +100,7 @@ public class DemoPersistence extends Application {
             }
         });
 
+        primaryStage.setTitle("JavaFX con JPA");
         primaryStage.setScene(escena);
         primaryStage.show();
     }
@@ -127,6 +135,7 @@ public class DemoPersistence extends Application {
             public void handle(ActionEvent event) {
 
                 Stage paraAutor = new Stage();
+                paraAutor.setTitle("Crear un Autor...");
                 paraAutor.setScene(new Scene(crearAutor(), 400, 200));
                 paraAutor.showAndWait();
             }
@@ -135,6 +144,7 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Stage paraAutor = new Stage();
+                paraAutor.setTitle("Buscar Autor...");
                 paraAutor.setScene(new Scene(buscarAutor(), 400, 300));
                 paraAutor.showAndWait();
             }
@@ -143,6 +153,7 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Stage paraAutor = new Stage();
+                paraAutor.setTitle("Listado de Autores");
                 paraAutor.setScene(new Scene(listarAutores(), 512, 480));
                 paraAutor.showAndWait();
             }
@@ -151,6 +162,7 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Stage paraAutor = new Stage();
+                paraAutor.setTitle("Cambiar un Autor...");
                 paraAutor.setScene(new Scene(actualizarAutor(), 400, 200));
                 paraAutor.showAndWait();
             }
@@ -158,6 +170,7 @@ public class DemoPersistence extends Application {
         eliminarAutorButton.setOnAction(event -> {
             try {
                 Stage paraAutor = new Stage();
+                paraAutor.setTitle("Eliminar un Autor...");
                 paraAutor.setScene(new Scene(eliminarAutor(), 400, 200));
                 paraAutor.showAndWait();
 
@@ -172,6 +185,7 @@ public class DemoPersistence extends Application {
     private HBox crearAutor() {
         TextField nombreTextField = new TextField();
         Button crearAutorButton = new Button("Crear autor");
+        VBox acomodaEtiqueta = new VBox();
         Label messageLabel = new Label("Esperando...");
 
         // Create the Label
@@ -191,7 +205,8 @@ public class DemoPersistence extends Application {
 
         // Create the HBox
         HBox cajitaNuevoAutor = new HBox();
-        cajitaNuevoAutor.getChildren().addAll(nombreLabel, nombreTextField, crearAutorButton, messageLabel);
+        acomodaEtiqueta.getChildren().addAll(nombreLabel, nombreTextField, crearAutorButton, messageLabel);
+        cajitaNuevoAutor.getChildren().add(acomodaEtiqueta);
         return cajitaNuevoAutor;
     }
 
@@ -237,7 +252,7 @@ public class DemoPersistence extends Application {
         // Create the VBox
         VBox cajitaBuscaAutor = new VBox();
 
-        cajitaBuscaAutor.getChildren().addAll(cajitaBuscadora1,statusLabel);
+        cajitaBuscaAutor.getChildren().addAll(cajitaBuscadora1, statusLabel);
         return cajitaBuscaAutor;
     }
 
@@ -303,7 +318,7 @@ public class DemoPersistence extends Application {
             }
         });
 
-        cajitaActualizaAutor.getChildren().addAll(new Label("ID autor:"),idTextField,new Label("Nombre Autor:"), nameTextField, updateButton, messageLabel);
+        cajitaActualizaAutor.getChildren().addAll(new Label("ID autor:"), idTextField, new Label("Nombre Autor:"), nameTextField, updateButton, messageLabel);
         return cajitaActualizaAutor;
     }
 
