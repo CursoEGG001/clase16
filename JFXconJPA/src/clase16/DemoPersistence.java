@@ -28,13 +28,17 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
@@ -425,9 +429,12 @@ public class DemoPersistence extends Application {
         volverButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                presentador.getChildren().remove(0);
+                if (!presentador.getChildren().isEmpty()) {
+                    presentador.getChildren().remove(0);
+                }
             }
         });
+
         cajitaMenuEditoriales.getChildren().addAll(crearButton, buscarButton, listarButton, actualizarButton, eliminarButton, volverButton);
         return cajitaMenuEditoriales;
     }
@@ -602,42 +609,61 @@ public class DemoPersistence extends Application {
         crearButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code to create a book
+                Stage paraLibros = new Stage();
+                paraLibros.setTitle("Crear un Libro");
+                paraLibros.setScene(new Scene(crearLibro(), 400, 300));
+                paraLibros.showAndWait();
             }
         });
 
         buscarButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code to search for a book
+                Stage paraLibros = new Stage();
+                paraLibros.setTitle("Buscar Libro...");
+                paraLibros.setScene(new Scene(buscarLibro(), 400, 300));
+                paraLibros.showAndWait();
             }
         });
 
         listarButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code to list all books
+                Stage paraLibros = new Stage();
+                paraLibros.setTitle("Listado de Libros");
+                paraLibros.setScene(new Scene(listarLibros(), 400, 300));
+                paraLibros.showAndWait();
             }
         });
 
         actualizarButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code to update a book
+                Stage paraLibros = new Stage();
+                paraLibros.setTitle("Actualiza un Libro");
+                paraLibros.setScene(new Scene(actualizarLibro(), 400, 300));
+                paraLibros.showAndWait();
             }
         });
 
         eliminarButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code to delete a book
+                Stage paraLibros = new Stage();
+                paraLibros.setTitle("Crear un Libro");
+                paraLibros.setScene(new Scene(eliminarLibro(), 400, 300));
+                paraLibros.showAndWait();
             }
         });
 
         salirButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code to exit the application
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("No implementado!");
+                alert.setHeaderText("La función de salida no está impementada");
+                alert.setContentText("Haz clic en Aceptar para continuar");
+                alert.showAndWait();
             }
         });
 
@@ -646,7 +672,7 @@ public class DemoPersistence extends Application {
 
     }
 
-    private VBox crearLibro() throws Exception {
+    private VBox crearLibro() {
         TextField isbnTextField = new TextField("ISBN");
         TextField tituloTextField = new TextField("Titulo");
         TextField anioTextField = new TextField("Año");
@@ -744,7 +770,7 @@ public class DemoPersistence extends Application {
     private VBox listarLibros() {
 
         VBox cajitaListaLibro = new VBox();
-        HBox acomolaLista = new HBox();
+        HBox acomodaLista = new HBox();
 
         // Llamar al controlador de Libros para obtener todos los libros
         List<Libro> libros = manejoLibro.findLibroEntities();
@@ -782,12 +808,12 @@ public class DemoPersistence extends Application {
         ObservableList<Libro> data = FXCollections.observableArrayList(libros);
         tableView.setItems(data);
 
-        acomolaLista.getChildren().add(tableView);
+        acomodaLista.getChildren().add(tableView);
         cajitaListaLibro.getChildren().add(tableView);
         return cajitaListaLibro;
     }
 
-    private VBox actualizarLibro() throws Exception {
+    private VBox actualizarLibro() {
         TextField isbnTextField = new TextField();
         TextField tituloTextField = new TextField();
         TextField anioTextField = new TextField();
@@ -831,7 +857,7 @@ public class DemoPersistence extends Application {
         return cajitaActualizaLibro;
     }
 
-    private VBox eliminarLibro() throws NonexistentEntityException {
+    private VBox eliminarLibro() {
         TextField isbnTextField;
         Button eliminarButton;
         Label messageLabel;
@@ -876,7 +902,10 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    cajitaMenuPrestamos.getChildren().add(crearPrestamo());
+                    Stage paraPrestamo = new Stage();
+                    paraPrestamo.setTitle("Crear Prestamo");
+                    paraPrestamo.setScene(new Scene(crearPrestamo(), 400, 200));
+                    paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
                 }
@@ -887,7 +916,10 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    cajitaMenuPrestamos.getChildren().add(buscarPrestamo());
+                    Stage paraPrestamo = new Stage();
+                    paraPrestamo.setTitle("Crear Prestamo");
+                    paraPrestamo.setScene(new Scene(buscarPrestamo(), 400, 200));
+                    paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
                 }
@@ -898,7 +930,10 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    cajitaMenuPrestamos.getChildren().add(listarPrestamos());
+                    Stage paraPrestamo = new Stage();
+                    paraPrestamo.setTitle("Crear Prestamo");
+                    paraPrestamo.setScene(new Scene(listarPrestamos(), 400, 200));
+                    paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
                 }
@@ -909,7 +944,10 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    cajitaMenuPrestamos.getChildren().add(actualizarPrestamo());
+                    Stage paraPrestamo = new Stage();
+                    paraPrestamo.setTitle("Crear Prestamo");
+                    paraPrestamo.setScene(new Scene(actualizarPrestamo(), 400, 200));
+                    paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
                 }
@@ -920,7 +958,10 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    cajitaMenuPrestamos.getChildren().add(eliminarPrestamo());
+                    Stage paraPrestamo = new Stage();
+                    paraPrestamo.setTitle("Crear Prestamo");
+                    paraPrestamo.setScene(new Scene(eliminarPrestamo(), 400, 200));
+                    paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
                 }
@@ -930,7 +971,11 @@ public class DemoPersistence extends Application {
         salirButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println(cajitaMenuPrestamos.getParent());
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("No implementado!");
+                alert.setHeaderText("La función de salida no está impementada");
+                alert.setContentText("Haz clic en Aceptar para continuar");
+                alert.showAndWait();
 
             }
         });
@@ -1149,8 +1194,74 @@ public class DemoPersistence extends Application {
         Button actualizarClienteButton = new Button("Actualizar Cliente");
         Button eliminarClienteButton = new Button("Eliminar Cliente");
         Button volverButton = new Button("Volver");
-
         VBox cajitaMenuCliente = new VBox(10);
+
+        crearClienteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage paraClientes = new Stage();
+                paraClientes.setTitle("Crear Cliente");
+                paraClientes.setScene(new Scene(crearCliente(), 400, 200));
+                paraClientes.showAndWait();
+            }
+        });
+
+        buscarClienteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage paraClientes = new Stage();
+                paraClientes.setTitle("Buscar Cliente");
+                paraClientes.setScene(new Scene(buscarCliente(), 400, 200));
+                paraClientes.showAndWait();
+            }
+        });
+
+        listarClientesButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage paraClientes = new Stage();
+                paraClientes.setTitle("Listado Clientes");
+                paraClientes.setScene(new Scene(listarClientes(), 400, 200));
+                paraClientes.showAndWait();
+            }
+        });
+
+        actualizarClienteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    Stage paraClientes = new Stage();
+                    paraClientes.setTitle("Actualiza Cliente");
+                    paraClientes.setScene(new Scene(actualizarCliente(), 400, 200));
+                    paraClientes.showAndWait();
+                } catch (Exception exception) {
+                    System.out.println("Error actualizando cliente:" + exception.getMessage());
+                }
+            }
+        });
+
+        eliminarClienteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage paraClientes = new Stage();
+                paraClientes.setTitle("Eliminar Cliente");
+                try {
+                    paraClientes.setScene(new Scene(eliminarCliente(), 400, 200));
+                } catch (NonexistentEntityException ex) {
+                    Logger.getLogger(DemoPersistence.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                paraClientes.showAndWait();
+            }
+        });
+
+        volverButton.setOnAction((event) -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("No implementado!");
+            alert.setHeaderText("La función de salida no está impementada");
+            alert.setContentText("Haz clic en Aceptar para continuar");
+            alert.showAndWait();
+        });
+
         cajitaMenuCliente.getChildren().addAll(
                 crearClienteButton, buscarClienteButton, listarClientesButton,
                 actualizarClienteButton, eliminarClienteButton, volverButton
@@ -1168,6 +1279,15 @@ public class DemoPersistence extends Application {
         Label messageLabel = new Label();
 
         VBox cajitaCreaCliente = new VBox();
+        documentoTextField.setText("DNI");
+        documentoTextField.setTooltip(new Tooltip("Ingrese un DNI sin los puntos"));
+        nombreTextField.setText("Ingrese un nombre");
+        nombreTextField.setTooltip(new Tooltip("Ingrese un Nombre por favor."));
+        apellidoTextField.setText("Ingrese un apellido");
+        apellidoTextField.setTooltip(new Tooltip("Ingrese un Apellido por favor."));
+        telefonoTextField.setText("Ingrese un teléfono");
+        telefonoTextField.setTooltip(new Tooltip("Ingrese un teléfono con código de area"));
+        messageLabel.setText("Ingrese los datos requeridos");
 
         crearClienteButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1215,12 +1335,13 @@ public class DemoPersistence extends Application {
                     Cliente cliente = manejoCliente.findCliente(id);
 
                     if (cliente != null) {
-                        messageLabel.setText("Cliente encontrado:");
-                        messageLabel.setText("ID: " + cliente.getId());
-                        messageLabel.setText("Documento: " + cliente.getDocumento());
-                        messageLabel.setText("Nombre: " + cliente.getNombre());
-                        messageLabel.setText("Apellido: " + cliente.getApellido());
-                        messageLabel.setText("Teléfono: " + cliente.getTelefono());
+                        messageLabel.setText(("Cliente encontrado:\n")
+                                + ("\nID: " + cliente.getId())
+                                + ("\nDocumento: " + cliente.getDocumento())
+                                + ("\nNombre: " + cliente.getNombre())
+                                + ("\nApellido: " + cliente.getApellido())
+                                + ("\nTeléfono: " + cliente.getTelefono()));
+
                     } else {
                         messageLabel.setText("Cliente no encontrado.");
                     }
