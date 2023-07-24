@@ -74,5 +74,6 @@ public class Editorial implements Serializable {
     public String toString() {
         return "libreria.entidades.Editorial[ id=" + id + " ]";
     }
+
     
 }

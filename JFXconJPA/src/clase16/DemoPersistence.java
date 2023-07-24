@@ -17,34 +17,37 @@ import biblioteca.servicios.LibroController;
 import biblioteca.servicios.PrestamoController;
 import biblioteca.servicios.exceptions.NonexistentEntityException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  *
@@ -179,7 +182,7 @@ public class DemoPersistence extends Application {
                 paraAutor.showAndWait();
 
             } catch (NonexistentEntityException ex) {
-                Logger.getLogger(DemoPersistence.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("No existe: " + ex.getMessage());
             }
         });
         cajitaAutores.getChildren().addAll(crearAutorButton, buscarAutorButton, listarAutoresButton, actualizarAutorButton, eliminarAutorButton);
@@ -796,10 +799,10 @@ public class DemoPersistence extends Application {
         ejemplaresRestantesColumn.setCellValueFactory(new PropertyValueFactory<>("ejemplaresRestantes"));
 
         TableColumn<Libro, String> autorColumn = new TableColumn<>("Autor");
-        autorColumn.setCellValueFactory(new PropertyValueFactory<>("autor.nombre"));
+        autorColumn.setCellValueFactory(new PropertyValueFactory<>("Autor"));
 
         TableColumn<Libro, String> editorialColumn = new TableColumn<>("Editorial");
-        editorialColumn.setCellValueFactory(new PropertyValueFactory<>("editorial.nombre"));
+        editorialColumn.setCellValueFactory(new PropertyValueFactory<>("Editorial"));
 
         // Agregar las columnas a la tabla
         tableView.getColumns().addAll(isbnColumn, tituloColumn, anioColumn, ejemplaresPrestadosColumn, ejemplaresRestantesColumn, autorColumn, editorialColumn);
@@ -984,11 +987,18 @@ public class DemoPersistence extends Application {
     }
 
     private VBox crearPrestamo() throws Exception {
-        TextField libroIsbnTextField = new TextField();
-        TextField clienteIdTextField = new TextField();
+        TextField libroIsbnTextField = new TextField("ISBN del libro");
+        TextField clienteIdTextField = new TextField("El ID del cliene");
         Button crearPrestamoButton = new Button("Crear préstamo");
+        DatePicker cuandoPresta = new DatePicker(LocalDate.now());
+        DatePicker cuandoDevuelve = new DatePicker(LocalDate.now().plusDays(1));
+        
         Label messageLabel = new Label();
         VBox cajitaCreaPrestamo = new VBox();
+        cajitaCreaPrestamo.setPadding(new Insets(3));
+        
+        libroIsbnTextField.setTooltip(new Tooltip("El ISBN del libro a prestar"));
+        clienteIdTextField.setTooltip(new Tooltip("El ID del cliente al cual se le presta el libro"));
 
         crearPrestamoButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1004,6 +1014,8 @@ public class DemoPersistence extends Application {
                         Prestamo prestamo = new Prestamo();
                         prestamo.setLibro(libro);
                         prestamo.setCliente(cliente);
+                        prestamo.setFechaPrestamo(Date.from(cuandoPresta.getValue().atStartOfDay().toInstant(ZoneOffset.UTC)));
+                        prestamo.setFechaDevolucion(Date.from(cuandoDevuelve.getValue().atStartOfDay().toInstant(ZoneOffset.UTC)));
 
                         // Llamar al controlador de Prestamos para crear el prestamo en la base de datos
                         manejoPrestamo.create(prestamo);
@@ -1017,12 +1029,14 @@ public class DemoPersistence extends Application {
                         messageLabel.setText("No hay ejemplares disponibles para prestar.");
                     }
                 } catch (Exception ex) {
-                    messageLabel.setText(ex.getMessage());
+                    messageLabel.setText("No se pudo realizar la operación: \n"+ex.getMessage());
                 }
             }
         });
 
-        cajitaCreaPrestamo.getChildren().addAll(libroIsbnTextField, clienteIdTextField, crearPrestamoButton, messageLabel);
+        cuandoPresta.getEditor().getText();
+        
+        cajitaCreaPrestamo.getChildren().addAll(libroIsbnTextField, clienteIdTextField,cuandoPresta,cuandoDevuelve, crearPrestamoButton, messageLabel);
         return cajitaCreaPrestamo;
     }
 
@@ -1043,12 +1057,12 @@ public class DemoPersistence extends Application {
                     Prestamo prestamo = manejoPrestamo.findPrestamo(id);
 
                     if (prestamo != null) {
-                        messageLabel.setText("Préstamo encontrado:");
-                        messageLabel.setText("ID: " + prestamo.getId());
-                        messageLabel.setText("Fecha de Préstamo: " + prestamo.getFechaPrestamo());
-                        messageLabel.setText("Fecha de Devolución: " + prestamo.getFechaDevolucion());
-                        messageLabel.setText("Libro: " + prestamo.getLibro().getTitulo());
-                        messageLabel.setText("Cliente: " + prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido());
+                        messageLabel.setText(("Préstamo encontrado:")
+                                + ("\nID: " + prestamo.getId())
+                                + ("\nFecha de Préstamo: " + prestamo.getFechaPrestamo())
+                                + ("\nFecha de Devolución: " + prestamo.getFechaDevolucion())
+                                + ("\nLibro: " + prestamo.getLibro().getTitulo())
+                                + ("\nCliente: " + prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido()));
                     } else {
                         messageLabel.setText("Préstamo no encontrado.");
                     }
@@ -1090,10 +1104,10 @@ public class DemoPersistence extends Application {
                     fechaDevolucionColumn.setCellValueFactory(new PropertyValueFactory<>("fechaDevolucion"));
 
                     TableColumn<Prestamo, String> libroColumn = new TableColumn<>("Libro");
-                    libroColumn.setCellValueFactory(new PropertyValueFactory<>("libro.titulo"));
+                    libroColumn.setCellValueFactory(new PropertyValueFactory<>("libro"));
 
                     TableColumn<Prestamo, String> clienteColumn = new TableColumn<>("Cliente");
-                    clienteColumn.setCellValueFactory(new PropertyValueFactory<>("cliente.nombre + ' ' + cliente.apellido"));
+                    clienteColumn.setCellValueFactory(new PropertyValueFactory<>("cliente"));
 
                     // Agregar las columnas a la tabla de préstamos
                     prestamosTableView.getColumns().addAll(idColumn, fechaPrestamoColumn, fechaDevolucionColumn, libroColumn, clienteColumn);
@@ -1248,7 +1262,7 @@ public class DemoPersistence extends Application {
                 try {
                     paraClientes.setScene(new Scene(eliminarCliente(), 400, 200));
                 } catch (NonexistentEntityException ex) {
-                    Logger.getLogger(DemoPersistence.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("No existe: " + ex.getMessage());
                 }
                 paraClientes.showAndWait();
             }
@@ -1508,4 +1522,5 @@ public class DemoPersistence extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

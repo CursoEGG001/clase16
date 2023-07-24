@@ -139,5 +139,4 @@ public class PrestamoController implements Serializable {
             em.close();
         }
     }
-    
 }

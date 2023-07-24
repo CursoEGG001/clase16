@@ -75,4 +75,5 @@ public class Autor implements Serializable {
         return "libreria.entidades.Autor[ id=" + id + " ]";
     }
 
+
 }

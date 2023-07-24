@@ -138,5 +138,5 @@ public class EditorialController implements Serializable {
             em.close();
         }
     }
-    
+
 }
