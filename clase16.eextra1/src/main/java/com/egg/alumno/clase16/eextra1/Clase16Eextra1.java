@@ -16,6 +16,10 @@ import com.egg.alumno.clase16.eextra1.biblioteca.servicios.PrestamoController;
 import com.egg.alumno.clase16.eextra1.biblioteca.servicios.exceptions.NonexistentEntityException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -674,6 +678,10 @@ public class Clase16Eextra1 {
         // Obtener el libro y el cliente correspondientes a los IDs ingresados
         Libro libro = null;
         Cliente cliente = null;
+        String ponFechaYHora="";
+        Long diasPrestamo=0L;
+        DateTimeFormatter patronFecha= DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm");
+        Date fechaPrestado = new Date();
         try {
             System.out.print("Ingrese el ISBN del libro a prestar: ");
             Long libroId = scanner.nextLong();
@@ -686,6 +694,15 @@ public class Clase16Eextra1 {
             scanner.nextLine();
             cliente = clienteController.findCliente(clienteId);
             System.out.println(cliente.getApellido() + ", " + cliente.getNombre());
+            
+            System.out.println("Ingrese fecha de préstamo (yyyy-MM-dd HH:mm): ");
+            ponFechaYHora=scanner.nextLine();
+            System.out.println("Ingrése la cantidad de días a prestar");
+            diasPrestamo=scanner.nextLong();
+            scanner.nextLine();
+            fechaPrestado=Date.from(LocalDateTime.parse(ponFechaYHora, patronFecha).toInstant(ZoneOffset.UTC));
+            System.out.println("Se solicitó: " + fechaPrestado +
+                    "\nA devolver:"+ Date.from(LocalDateTime.parse(ponFechaYHora, patronFecha).toInstant(ZoneOffset.UTC).plus(diasPrestamo, ChronoUnit.DAYS)));
         } catch (InputMismatchException e) {
             System.out.println("Error en entrada: " + e.getMessage());
             scanner.next();
@@ -699,6 +716,8 @@ public class Clase16Eextra1 {
                     Prestamo prestamo = new Prestamo();
                     prestamo.setLibro(libro);
                     prestamo.setCliente(cliente);
+                    prestamo.setFechaPrestamo(fechaPrestado);
+                    prestamo.setFechaDevolucion(Date.from(LocalDateTime.parse(ponFechaYHora, patronFecha).toInstant(ZoneOffset.UTC).plus(diasPrestamo, ChronoUnit.DAYS)));
 
                     // Llamar al controlador de Prestamos para crear el prestamo en la base de datos
                     prestamoController.create(prestamo);

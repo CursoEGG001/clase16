@@ -6,12 +6,10 @@ package com.egg.alumno.clase16.eextra1.biblioteca.entidades;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -30,9 +28,7 @@ public class Prestamo implements Serializable {
     private Date fechaPrestamo;
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDevolucion;
-    @JoinColumn(unique = true)
     private Libro libro;
-    @JoinColumn(unique = true)
     private Cliente cliente;
 
     public Date getFechaPrestamo() {
