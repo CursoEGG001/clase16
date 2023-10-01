@@ -23,6 +23,9 @@ import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import javafx.application.Application;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -798,10 +801,16 @@ public class DemoPersistence extends Application {
         ejemplaresRestantesColumn.setCellValueFactory(new PropertyValueFactory<>("ejemplaresRestantes"));
         
         TableColumn<Libro, String> autorColumn = new TableColumn<>("Autor");
-        autorColumn.setCellValueFactory(new PropertyValueFactory<>("Autor"));
+        autorColumn.setCellValueFactory((param) -> {
+            String esteAutor = param.getValue().getAutor().getNombre();
+            return new SimpleStringProperty(esteAutor);
+        });
         
         TableColumn<Libro, String> editorialColumn = new TableColumn<>("Editorial");
-        editorialColumn.setCellValueFactory(new PropertyValueFactory<>("Editorial"));
+        editorialColumn.setCellValueFactory((param) -> {
+            String esteEditorial= param.getValue().getEditorial().getNombre();
+            return new SimpleStringProperty(esteEditorial);
+        });
 
         // Agregar las columnas a la tabla
         tableView.getColumns().addAll(isbnColumn, tituloColumn, anioColumn, ejemplaresPrestadosColumn, ejemplaresRestantesColumn, autorColumn, editorialColumn);
