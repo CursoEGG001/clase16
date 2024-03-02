@@ -35,6 +35,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -988,7 +989,7 @@ public class DemoPersistence extends Application {
                 try {
                     Stage paraPrestamo = new Stage();
                     paraPrestamo.setTitle("Prestamo que Debe Actualizar");
-                    paraPrestamo.setScene(new Scene(actualizarPrestamo(), 400, 200));
+                    paraPrestamo.setScene(new Scene(actualizarPrestamo(), Control.USE_COMPUTED_SIZE, Control.USE_COMPUTED_SIZE));
                     paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
@@ -1203,9 +1204,11 @@ public class DemoPersistence extends Application {
                 nuevoValorTextField.setText(Date.from(itemBuscado.getFechaDevolucion().toInstant()).toString());
                 cuandoPrestaActualiza.setValue(LocalDate.from(itemBuscado.getFechaPrestamo().toInstant().atOffset(ZoneOffset.UTC)));
                 cuandoDevuelveActualiza.setValue(LocalDate.from(itemBuscado.getFechaDevolucion().toInstant().atOffset(ZoneOffset.UTC)));
-                messageLabel.setText("Encontrada: " + itemBuscado);
+                messageLabel.setText("Encontrada: " + itemBuscado.getId() + "\n" + itemBuscado.getCliente().getApellido() + ", " + itemBuscado.getCliente().getNombre() + "\n"
+                        + itemBuscado.getFechaPrestamo() + " - " + itemBuscado.getFechaDevolucion() + "\n"
+                        + itemBuscado.getLibro().getTitulo() + "(" + itemBuscado.getLibro().getAutor().getNombre() + ")");
             } catch (Exception e) {
-                messageLabel.setText("No se encontró -- "+e.getMessage());
+                messageLabel.setText("No se encontró -- " + e.getMessage());
             }
         });
         actualizarPrestamoButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1245,7 +1248,9 @@ public class DemoPersistence extends Application {
                 prestamoLabel,
                 new Label("ID a actualizar"),
                 idTextField,
+                new Label("Fecha de prestado"),
                 cuandoPrestaActualiza,
+                new Label("Fecha de devolución"),
                 cuandoDevuelveActualiza,
                 new Label("Cambiar a:"),
                 nuevoValorTextField,
