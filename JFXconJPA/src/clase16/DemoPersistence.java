@@ -29,7 +29,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -43,10 +46,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -793,8 +799,8 @@ public class DemoPersistence extends Application {
                     } else {
                         messageLabel.setText("Libro no encontrado.");
                     }
-                } catch (InputMismatchException e) {
-                    messageLabel.setText("Error al ingresar datos");
+                } catch (NoResultException | InputMismatchException e) {
+                    messageLabel.setText("Error al ingresar datos: " + e.getMessage());
                 }
             }
         });
@@ -975,7 +981,7 @@ public class DemoPersistence extends Application {
                 try {
                     Stage paraPrestamo = new Stage();
                     paraPrestamo.setTitle("Crear Prestamo");
-                    paraPrestamo.setScene(new Scene(listarPrestamos(), 400, 200));
+                    paraPrestamo.setScene(new Scene(listarPrestamos(), Control.USE_COMPUTED_SIZE, Control.USE_COMPUTED_SIZE));
                     paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
@@ -1034,8 +1040,8 @@ public class DemoPersistence extends Application {
     }
 
     private VBox crearPrestamo() throws Exception {
-        TextField libroIsbnTextField = new TextField("ISBN del libro");
-        TextField clienteIdTextField = new TextField("El ID del cliene");
+        TextField libroIsbnTextField = new TextField();
+        TextField clienteIdTextField = new TextField();
         Button crearPrestamoButton = new Button("Crear préstamo");
         DatePicker cuandoPresta = new DatePicker(LocalDate.now());
         DatePicker cuandoDevuelve = new DatePicker(LocalDate.now().plusDays(1));
@@ -1044,8 +1050,44 @@ public class DemoPersistence extends Application {
         VBox cajitaCreaPrestamo = new VBox();
         cajitaCreaPrestamo.setPadding(new Insets(3));
 
+        libroIsbnTextField.setPromptText("ISBN del libro");
         libroIsbnTextField.setTooltip(new Tooltip("El ISBN del libro a prestar"));
+        clienteIdTextField.setPromptText("ID del Cliente");
         clienteIdTextField.setTooltip(new Tooltip("El ID del cliente al cual se le presta el libro"));
+
+        //Definimos una acción para el campo de texto del Libro
+        libroIsbnTextField.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                //El contenido será presentado en una ventana emergente
+                Popup selectLibro = new Popup();
+                selectLibro.setAutoHide(true); //  Desaparecerá al no tener el foco.
+                selectLibro.getContent().addAll(listarLibros()); //La función listarLibros() ya devolvía un VBox con Tableview.
+                selectLibro.show(libroIsbnTextField.getScene().getWindow(),
+                        libroIsbnTextField.getScene().getWindow().getX() + libroIsbnTextField.getScene().getX(),
+                        (libroIsbnTextField.getScene().getWindow().getY() + libroIsbnTextField.getScene().getY() + libroIsbnTextField.getHeight()));
+
+                //Se busca el TableView en el contenido del Popup.
+                for (Node node : selectLibro.getContent()) {
+                    if (node instanceof Parent) {
+                        // el TableView se encuentra en una instancia del Node.
+                        for (Node laTabla : ((Parent) node).getChildrenUnmodifiable()) {
+                            if (laTabla instanceof TableView) {
+
+                                //Se pasa la selección al campo de texto para usar el valor ISBN en el préstamo.
+                                ((TableView) laTabla).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                                    Libro elegido = (Libro) newValue;
+                                    libroIsbnTextField.setText(elegido.getIsbn().toString());
+                                    selectLibro.hide(); // Luego de la elección se esconde el Popup.
+                                });
+                            }
+                        }
+                    }
+                }
+
+            }
+        });
 
         crearPrestamoButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
