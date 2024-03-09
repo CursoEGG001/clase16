@@ -1089,9 +1089,52 @@ public class DemoPersistence extends Application {
             }
         });
 
-        crearPrestamoButton.setOnAction(new EventHandler<ActionEvent>() {
+        clienteIdTextField.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
+                // Crea una ventana Popup
+                Popup selectCliente = new Popup();
+                selectCliente.setAutoHide(true); // Se esconde cuando pierde el foco.
+
+                // Rellena el popup con el contenido de listarClientes()
+                selectCliente.getContent().addAll(listarClientes()); // devuelve VBox con un TableView
+
+                // muestra el popup en las coordenada de clienteIdTextField con desplazamiento igual a su altura.
+                selectCliente.show(clienteIdTextField.getScene().getWindow(),
+                        clienteIdTextField.getScene().getWindow().getX() + clienteIdTextField.getScene().getX(),
+                        (clienteIdTextField.getScene().getWindow().getY() + clienteIdTextField.getScene().getY() + clienteIdTextField.getHeight()));
+
+                // Busca el TableView dentro del popup
+                for (Node node : selectCliente.getContent()) {
+                    if (node instanceof Parent) {
+                        // el TableView esta dentro de una  instancia de Node
+                        for (Node subnodo : ((Parent) node).getChildrenUnmodifiable()) {
+                            if (subnodo instanceof HBox) {
+                                for (Node laTabla : ((Parent) subnodo).getChildrenUnmodifiable()) {
+
+                                    if (laTabla instanceof TableView) {
+                                        // Actualiza el campo de texto basado en la selección.
+                                        ((TableView) laTabla).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                                            Cliente elegido = (Cliente) newValue;
+                                            clienteIdTextField.setText(elegido.getId().toString());
+                                            selectCliente.hide(); // Esconde el popup tras selección.
+                                        });
+                                    } else {
+                                        clienteIdTextField.setText(clienteIdTextField.getText() + " " + laTabla.getTypeSelector());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        crearPrestamoButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event
+            ) {
                 try {
                     // Obtener el libro y el cliente correspondientes a los IDs ingresados
                     Libro libro = manejoLibro.findLibro(Long.parseLong(libroIsbnTextField.getText()));
@@ -1121,11 +1164,14 @@ public class DemoPersistence extends Application {
                     messageLabel.setText("No se pudo realizar la operación: \n" + ex.getMessage());
                 }
             }
-        });
+        }
+        );
 
-        cuandoPresta.getEditor().getText();
+        cuandoPresta.getEditor()
+                .getText();
 
-        cajitaCreaPrestamo.getChildren().addAll(libroIsbnTextField, clienteIdTextField, cuandoPresta, cuandoDevuelve, crearPrestamoButton, messageLabel);
+        cajitaCreaPrestamo.getChildren()
+                .addAll(libroIsbnTextField, clienteIdTextField, cuandoPresta, cuandoDevuelve, crearPrestamoButton, messageLabel);
         return cajitaCreaPrestamo;
     }
 
@@ -1420,13 +1466,13 @@ public class DemoPersistence extends Application {
         Label messageLabel = new Label();
 
         VBox cajitaCreaCliente = new VBox();
-        documentoTextField.setText("DNI");
+        documentoTextField.setPromptText("DNI");
         documentoTextField.setTooltip(new Tooltip("Ingrese un DNI sin los puntos"));
-        nombreTextField.setText("Ingrese un nombre");
+        nombreTextField.setPromptText("Ingrese un nombre");
         nombreTextField.setTooltip(new Tooltip("Ingrese un Nombre por favor."));
-        apellidoTextField.setText("Ingrese un apellido");
+        apellidoTextField.setPromptText("Ingrese un apellido");
         apellidoTextField.setTooltip(new Tooltip("Ingrese un Apellido por favor."));
-        telefonoTextField.setText("Ingrese un teléfono");
+        telefonoTextField.setPromptText("Ingrese un teléfono");
         telefonoTextField.setTooltip(new Tooltip("Ingrese un teléfono con código de area"));
         messageLabel.setText("Ingrese los datos requeridos");
 
