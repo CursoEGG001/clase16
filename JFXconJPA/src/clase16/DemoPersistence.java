@@ -680,7 +680,7 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Stage paraLibros = new Stage();
-                paraLibros.setTitle("Crear un Libro");
+                paraLibros.setTitle("Eliminar un Libro...");
                 paraLibros.setScene(new Scene(eliminarLibro(), 400, 300));
                 paraLibros.showAndWait();
             }
@@ -914,6 +914,11 @@ public class DemoPersistence extends Application {
         Button actualizarButton = new Button("Actualizar");
         Label messageLabel = new Label();
         VBox cajitaActualizaLibro = new VBox();
+        
+        isbnTextField.setPromptText("ISBN del libro");
+        tituloTextField.setPromptText("Título del libro");
+        anioTextField.setPromptText("Año de publicación del libro");
+        ejemplaresTextField.setPromptText("Ejemplares disponibles");
 
         actualizarButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -942,7 +947,7 @@ public class DemoPersistence extends Application {
                         messageLabel.setText("Libro no encontrado.");
                     }
                 } catch (Exception ex) {
-                    messageLabel.setText(ex.getMessage());
+                    messageLabel.setText("Error al actualizar: "+ex.getMessage());
                 }
             }
         });
