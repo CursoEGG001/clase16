@@ -19,6 +19,7 @@ import biblioteca.servicios.exceptions.NonexistentEntityException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -29,7 +30,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -46,6 +46,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -696,9 +697,52 @@ public class DemoPersistence extends Application {
             }
         });
 
-        opcionTextField.setOnKeyReleased((event) -> {
-            opcionTextField.setText("No implementado");
-            opcionTextField.selectAll();
+        opcionTextField.setPromptText("Seleccione opción del 1 al 5");
+        opcionTextField.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                String tecla = event.getCode().getName();
+                String mandaComando = opcionTextField.getText();
+
+                switch (tecla) {
+                    case "Numpad 1":
+                    case "1":
+                        opcionTextField.setText("Crear");
+
+                        break;
+                    case "Numpad 2":
+                    case "2":
+                        opcionTextField.setText("Buscar");
+
+                        break;
+                    case "Numpad 3":
+                    case "3":
+                        opcionTextField.setText("Listar");
+
+                        break;
+                    case "Numpad 4":
+                    case "4":
+                        opcionTextField.setText("Actualizar");
+
+                        break;
+                    case "Numpad 5":
+                    case "5":
+                        opcionTextField.setText("Eliminar");
+
+                        break;
+                    case "Enter":
+
+                        for (Object nodo1 : opcionTextField.getParent().getChildrenUnmodifiable()) {
+                            if (nodo1 instanceof Button && ((Button) nodo1).getText().contains(mandaComando)) {
+                                ((Button) nodo1).fire();
+                            }
+                        }
+                        break;
+                    default:
+                        opcionTextField.setText("No implementado (" + tecla + ")");
+                        opcionTextField.selectAll();
+                }
+            }
         });
 
         cajitaMenuLibros.getChildren().addAll(
@@ -1119,8 +1163,6 @@ public class DemoPersistence extends Application {
                                             clienteIdTextField.setText(elegido.getId().toString());
                                             selectCliente.hide(); // Esconde el popup tras selección.
                                         });
-                                    } else {
-                                        clienteIdTextField.setText(clienteIdTextField.getText() + " " + laTabla.getTypeSelector());
                                     }
                                 }
                             }
@@ -1381,7 +1423,7 @@ public class DemoPersistence extends Application {
         Button actualizarClienteButton = new Button("Actualizar Cliente");
         Button eliminarClienteButton = new Button("Eliminar Cliente");
         Button volverButton = new Button("Volver");
-        VBox cajitaMenuCliente = new VBox(10);
+        VBox cajitaMenuCliente = new VBox(2D);
 
         crearClienteButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1575,25 +1617,30 @@ public class DemoPersistence extends Application {
         buscarClienteButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Obtener el ID del cliente del usuario
-                Long id = clientesTableView.selectionModelProperty().get().getSelectedItem().getId();
+                try {
+                    // Obtener el ID del cliente del usuario
+                    Long id = clientesTableView.selectionModelProperty().get().getSelectedItem().getId();
 
-                // Llamar al controlador de Clientes para buscar el cliente por su ID
-                Cliente cliente = manejoCliente.findCliente(id);
+                    // Llamar al controlador de Clientes para buscar el cliente por su ID
+                    Cliente cliente = manejoCliente.findCliente(id);
 
-                if (cliente != null) {
-                    String salida = ("Cliente encontrado:")
-                            + ("\nID: " + cliente.getId())
-                            + ("\nDocumento: " + cliente.getDocumento())
-                            + ("\nNombre: " + cliente.getNombre())
-                            + ("\nApellido: " + cliente.getApellido())
-                            + ("\nTeléfono: " + cliente.getTelefono());
-                    messageLabel.setText(salida);
-                } else {
-                    messageLabel.setText("Cliente no encontrado.");
+                    if (cliente != null) {
+                        String salida = ("Cliente encontrado:")
+                                + ("\nID: " + cliente.getId())
+                                + ("\nDocumento: " + cliente.getDocumento())
+                                + ("\nNombre: " + cliente.getNombre())
+                                + ("\nApellido: " + cliente.getApellido())
+                                + ("\nTeléfono: " + cliente.getTelefono());
+                        messageLabel.setText(salida);
+                    } else {
+                        messageLabel.setText("Cliente no encontrado.");
+                    }
+                } catch (Exception e) {
+                    messageLabel.setText(e.getMessage());
                 }
             }
         });
+
         acomodaLista.getChildren().add(clientesTableView);
         cajitaListaClientes.getChildren().addAll(buscarClienteButton, acomodaLista, messageLabel);
         return cajitaListaClientes;
