@@ -19,7 +19,6 @@ import biblioteca.servicios.exceptions.NonexistentEntityException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -68,9 +67,6 @@ public class DemoPersistence extends Application {
     private PrestamoController manejoPrestamo = new PrestamoController();
     ComboBox<String> menuComboBox = new ComboBox<>();
 
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
     @Override
     public void start(Stage primaryStage) {
 
@@ -118,21 +114,6 @@ public class DemoPersistence extends Application {
         primaryStage.show();
     }
 
-    private VBox PresentaMenuPrincipal() {
-        Label label1 = new Label("Menú principal:");
-        Label label2 = new Label("1) Autores");
-        Label label3 = new Label("2) Editoriales");
-        Label label4 = new Label("3) Libros");
-        Label label5 = new Label("4) Préstamos");
-        Label label6 = new Label("5) Clientes");
-        Label label7 = new Label("6) Salir");
-
-        // Create the VBox
-        VBox cajitaPrincipal = new VBox();
-        cajitaPrincipal.getChildren().addAll(label1, label2, label3, label4, label5, label6, label7);
-        return cajitaPrincipal;
-    }
-
     private VBox menuAutores() {
 
         Button crearAutorButton = new Button("Crear autor");
@@ -140,9 +121,9 @@ public class DemoPersistence extends Application {
         Button listarAutoresButton = new Button("Listar autores");
         Button actualizarAutorButton = new Button("Actualizar autor");
         Button eliminarAutorButton = new Button("Eliminar autor");
-        // Create the VBox
+        // Crear un VBox
         VBox cajitaAutores = new VBox();
-        // Create the buttons
+        // Crea los botones
         crearAutorButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -201,13 +182,13 @@ public class DemoPersistence extends Application {
         VBox acomodaEtiqueta = new VBox();
         Label messageLabel = new Label("Esperando...");
 
-        // Create the Label
+        // Crea la Label
         Label nombreLabel = new Label("Nombre: ");
 
-        // Create the TextField
+        // Crea el TextField
         nombreTextField.setPromptText("Ingrese el nombre del autor");
 
-        // Create the Button
+        // Crea acciones del Button
         crearAutorButton.setOnAction((ActionEvent event) -> {
             Autor autor = new Autor();
             autor.setNombre(nombreTextField.getText());
@@ -216,7 +197,7 @@ public class DemoPersistence extends Application {
             messageLabel.setText(autor.getNombre() + " se agregó a la lista");
         });
 
-        // Create the HBox
+        // Crea el HBox
         HBox cajitaNuevoAutor = new HBox();
         acomodaEtiqueta.getChildren().addAll(nombreLabel, nombreTextField, crearAutorButton, messageLabel);
         cajitaNuevoAutor.getChildren().add(acomodaEtiqueta);
@@ -231,15 +212,15 @@ public class DemoPersistence extends Application {
 
         idTextField.setPromptText("Ingrese el ID del autor");
 
-        // Create the Button
+        // Ajusta las acciones del botón
         buscarAutorButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    // Get the ID from the TextField
+                    // Obtiene el ID del TextField
                     Long id = Long.parseLong(idTextField.getText());
 
-                    // Call the AutorController to find the author by ID
+                    // Llama el AutorController para encontrarl el Autor por ID
                     Autor autor = manejoAutor.findAutor(id);
 
                     if (autor != null) {
@@ -256,13 +237,13 @@ public class DemoPersistence extends Application {
 
         });
 
-        // Create the HBox
+        // Crea el HBox
         HBox cajitaBuscadora1 = new HBox();
 
         cajitaBuscadora1.getChildren()
                 .addAll(idLabel, idTextField, buscarAutorButton);
 
-        // Create the VBox
+        // Crea el VBox
         VBox cajitaBuscaAutor = new VBox();
 
         cajitaBuscaAutor.getChildren().addAll(cajitaBuscadora1, statusLabel);
@@ -272,7 +253,7 @@ public class DemoPersistence extends Application {
     private VBox listarAutores() {
         TableView<Autor> autoresTableView = new TableView<>();
 
-        // Create the columns
+        // Crea las columnas
         TableColumn<Autor, Integer> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -282,14 +263,14 @@ public class DemoPersistence extends Application {
         TableColumn<Autor, Boolean> altaColumn = new TableColumn<>("Alta");
         altaColumn.setCellValueFactory(new PropertyValueFactory<>("alta"));
 
-        // Add the columns to the TableView
+        // Agrega las columnas para el TableView
         autoresTableView.getColumns().addAll(idColumn, nombreColumn, altaColumn);
 
-        // Load the data from the database
+        // Carga los datos desde la BD.
         List<Autor> autores = manejoAutor.findAutorEntities();
         autoresTableView.getItems().setAll(autores);
 
-        // Create the VBox
+        // Crea el VBox
         VBox cajitaListaAutores = new VBox();
         cajitaListaAutores.getChildren().addAll(autoresTableView);
         return cajitaListaAutores;
@@ -315,7 +296,7 @@ public class DemoPersistence extends Application {
                     long id = Long.parseLong(idTextField.getText());
                     String name = nameTextField.getText();
 
-                    // Call the Author Controller to find the author by ID
+                    // Llama el AuthorController para encontrar el Autor por ID
                     Autor autor = manejoAutor.findAutor(id);
 
                     if (autor != null) {
@@ -352,7 +333,7 @@ public class DemoPersistence extends Application {
                 try {
                     long id = Long.parseLong(idTextField.getText());
 
-                    // Call the Author Controller to delete the author by ID
+                    // Llama el AuthorController para borrar el Autor por ID
                     manejoAutor.destroy(id);
                     messageLabel.setText("Autor correctamente borrado");
                 } catch (NonexistentEntityException ex) {
@@ -697,6 +678,7 @@ public class DemoPersistence extends Application {
             }
         });
 
+        //Usa el campo y su contenido para generar la acción de los botones desde lo encontrado en el campo.
         opcionTextField.setPromptText("Seleccione opción del 1 al 5");
         opcionTextField.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
@@ -731,8 +713,9 @@ public class DemoPersistence extends Application {
 
                         break;
                     case "Enter":
-
+                        // Detecta que evento debe iniciar explorando los nodos de la escena.
                         for (Object nodo1 : opcionTextField.getParent().getChildrenUnmodifiable()) {
+                            // Cuando coincide el campo de texto con el contenido del botón, inicia la acción del mismo.
                             if (nodo1 instanceof Button && ((Button) nodo1).getText().contains(mandaComando)) {
                                 ((Button) nodo1).fire();
                             }
@@ -914,7 +897,7 @@ public class DemoPersistence extends Application {
         Button actualizarButton = new Button("Actualizar");
         Label messageLabel = new Label();
         VBox cajitaActualizaLibro = new VBox();
-        
+
         isbnTextField.setPromptText("ISBN del libro");
         tituloTextField.setPromptText("Título del libro");
         anioTextField.setPromptText("Año de publicación del libro");
@@ -947,7 +930,7 @@ public class DemoPersistence extends Application {
                         messageLabel.setText("Libro no encontrado.");
                     }
                 } catch (Exception ex) {
-                    messageLabel.setText("Error al actualizar: "+ex.getMessage());
+                    messageLabel.setText("Error al actualizar: " + ex.getMessage());
                 }
             }
         });
@@ -1074,7 +1057,6 @@ public class DemoPersistence extends Application {
                 alert.setHeaderText("La función de salida no está impementada");
                 alert.setContentText("Haz clic en Aceptar para continuar");
                 alert.showAndWait();
-
             }
         });
         cajitaMenuPrestamos.getChildren().addAll(
