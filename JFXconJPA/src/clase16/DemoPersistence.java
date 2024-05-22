@@ -1256,6 +1256,7 @@ public class DemoPersistence extends Application {
 
                     // Limpiar la tabla de préstamos
                     prestamosTableView.getItems().clear();
+                    prestamosTableView.getColumns().clear();
 
                     // Agregar las columnas a la tabla de préstamos
                     TableColumn<Prestamo, Long> idColumn = new TableColumn<>("ID");
@@ -1280,7 +1281,7 @@ public class DemoPersistence extends Application {
                     });
 
                     // Agregar las columnas a la tabla de préstamos
-                    prestamosTableView.getColumns().addAll(idColumn, fechaPrestamoColumn, fechaDevolucionColumn, libroColumn, clienteColumn);
+                        prestamosTableView.getColumns().addAll(idColumn, fechaPrestamoColumn, fechaDevolucionColumn, libroColumn, clienteColumn);
 
                     // Agregar los préstamos a la tabla de préstamos
                     for (Prestamo prestamo : prestamos) {
