@@ -375,7 +375,9 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    presentador.getChildren().remove(1);
+                    for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                        presentador.getChildren().remove(i);
+                    }
                 }
                 presentador.getChildren().add(crearEditorial());
 
@@ -386,7 +388,9 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    presentador.getChildren().remove(1);
+                    for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                        presentador.getChildren().remove(i);
+                    }
                 }
                 presentador.getChildren().add(buscarEditorial());
             }
@@ -396,7 +400,9 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    presentador.getChildren().remove(1);
+                    for (int i = 0; i < presentador.getChildren().size()-1; i++) {
+                        presentador.getChildren().remove(i);
+                    }
                 }
                 presentador.getChildren().add(listarEditoriales());
             }
@@ -406,7 +412,9 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    presentador.getChildren().remove(1);
+                    for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                        presentador.getChildren().remove(i);
+                    }
                 }
                 presentador.getChildren().add(actualizarEditorial());
             }
@@ -416,7 +424,9 @@ public class DemoPersistence extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    presentador.getChildren().remove(1);
+                    for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                        presentador.getChildren().remove(i);
+                    }
                 }
                 presentador.getChildren().add(eliminarEditorial());
             }
@@ -425,10 +435,14 @@ public class DemoPersistence extends Application {
         volverButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (!presentador.getChildren().isEmpty()) {
-                    for (int i = 0; i < presentador.getChildren().size(); i++) {
-                        presentador.getChildren().remove(i);
+                try {
+                    if (!presentador.getChildren().isEmpty()) {
+                        for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                            presentador.getChildren().remove(i);
+                        }
                     }
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Presentador size: " + presentador.getChildren().size());
                 }
             }
         });
@@ -878,7 +892,14 @@ public class DemoPersistence extends Application {
         });
 
         // Agregar las columnas a la tabla
-        tableView.getColumns().addAll(isbnColumn, tituloColumn, anioColumn, ejemplaresPrestadosColumn, ejemplaresRestantesColumn, autorColumn, editorialColumn);
+        tableView.getColumns().addAll(
+                isbnColumn,
+                tituloColumn,
+                anioColumn,
+                ejemplaresPrestadosColumn,
+                ejemplaresRestantesColumn,
+                autorColumn,
+                editorialColumn);
 
         // Agregar los libros a la tabla
         ObservableList<Libro> data = FXCollections.observableArrayList(libros);
@@ -934,7 +955,13 @@ public class DemoPersistence extends Application {
                 }
             }
         });
-        cajitaActualizaLibro.getChildren().addAll(isbnTextField, tituloTextField, anioTextField, ejemplaresTextField, actualizarButton, messageLabel);
+        cajitaActualizaLibro.getChildren().addAll(
+                isbnTextField,
+                tituloTextField,
+                anioTextField,
+                ejemplaresTextField,
+                actualizarButton,
+                messageLabel);
         return cajitaActualizaLibro;
     }
 
@@ -964,7 +991,10 @@ public class DemoPersistence extends Application {
             }
         });
 
-        cajitaEliminarLibro.getChildren().addAll(isbnTextField, eliminarButton, messageLabel);
+        cajitaEliminarLibro.getChildren().addAll(
+                isbnTextField,
+                eliminarButton,
+                messageLabel);
 
         return cajitaEliminarLibro;
     }
@@ -1013,7 +1043,11 @@ public class DemoPersistence extends Application {
                 try {
                     Stage paraPrestamo = new Stage();
                     paraPrestamo.setTitle("Crear Prestamo");
-                    paraPrestamo.setScene(new Scene(listarPrestamos(), Control.USE_COMPUTED_SIZE, Control.USE_COMPUTED_SIZE));
+                    paraPrestamo.setScene(
+                            new Scene(listarPrestamos(),
+                                    Control.USE_COMPUTED_SIZE,
+                                    Control.USE_COMPUTED_SIZE)
+                    );
                     paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
@@ -1027,7 +1061,11 @@ public class DemoPersistence extends Application {
                 try {
                     Stage paraPrestamo = new Stage();
                     paraPrestamo.setTitle("Prestamo que Debe Actualizar");
-                    paraPrestamo.setScene(new Scene(actualizarPrestamo(), Control.USE_COMPUTED_SIZE, Control.USE_COMPUTED_SIZE));
+                    paraPrestamo.setScene(
+                            new Scene(actualizarPrestamo(),
+                                    Control.USE_COMPUTED_SIZE,
+                                    Control.USE_COMPUTED_SIZE)
+                    );
                     paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
@@ -1041,7 +1079,10 @@ public class DemoPersistence extends Application {
                 try {
                     Stage paraPrestamo = new Stage();
                     paraPrestamo.setTitle("Crear Prestamo");
-                    paraPrestamo.setScene(new Scene(eliminarPrestamo(), 400, 200));
+                    paraPrestamo.setScene(new Scene(eliminarPrestamo(),
+                            400,
+                            200)
+                    );
                     paraPrestamo.showAndWait();
                 } catch (Exception ex) {
                     messageLabel.setText(ex.getMessage());
@@ -1281,7 +1322,7 @@ public class DemoPersistence extends Application {
                     });
 
                     // Agregar las columnas a la tabla de préstamos
-                        prestamosTableView.getColumns().addAll(idColumn, fechaPrestamoColumn, fechaDevolucionColumn, libroColumn, clienteColumn);
+                    prestamosTableView.getColumns().addAll(idColumn, fechaPrestamoColumn, fechaDevolucionColumn, libroColumn, clienteColumn);
 
                     // Agregar los préstamos a la tabla de préstamos
                     for (Prestamo prestamo : prestamos) {
@@ -1418,7 +1459,11 @@ public class DemoPersistence extends Application {
             public void handle(ActionEvent event) {
                 Stage paraClientes = new Stage();
                 paraClientes.setTitle("Crear Cliente");
-                paraClientes.setScene(new Scene(crearCliente(), 400, 200));
+                paraClientes.setScene(
+                        new Scene(crearCliente(),
+                                400,
+                                200)
+                );
                 paraClientes.showAndWait();
             }
         });
@@ -1428,7 +1473,10 @@ public class DemoPersistence extends Application {
             public void handle(ActionEvent event) {
                 Stage paraClientes = new Stage();
                 paraClientes.setTitle("Buscar Cliente");
-                paraClientes.setScene(new Scene(buscarCliente(), 400, 200));
+                paraClientes.setScene(new Scene(buscarCliente(),
+                        400,
+                        200)
+                );
                 paraClientes.showAndWait();
             }
         });
@@ -1438,7 +1486,10 @@ public class DemoPersistence extends Application {
             public void handle(ActionEvent event) {
                 Stage paraClientes = new Stage();
                 paraClientes.setTitle("Listado Clientes");
-                paraClientes.setScene(new Scene(listarClientes(), 400, 200));
+                paraClientes.setScene(new Scene(listarClientes(),
+                        400,
+                        200)
+                );
                 paraClientes.showAndWait();
             }
         });
@@ -1449,7 +1500,11 @@ public class DemoPersistence extends Application {
                 try {
                     Stage paraClientes = new Stage();
                     paraClientes.setTitle("Actualiza Cliente");
-                    paraClientes.setScene(new Scene(actualizarCliente(), 400, 200));
+                    paraClientes.setScene(
+                            new Scene(actualizarCliente(),
+                                    400,
+                                    200)
+                    );
                     paraClientes.showAndWait();
                 } catch (Exception exception) {
                     System.out.println("Error actualizando cliente:" + exception.getMessage());
@@ -1463,7 +1518,11 @@ public class DemoPersistence extends Application {
                 Stage paraClientes = new Stage();
                 paraClientes.setTitle("Eliminar Cliente");
                 try {
-                    paraClientes.setScene(new Scene(eliminarCliente(), 400, 200));
+                    paraClientes.setScene(
+                            new Scene(eliminarCliente(),
+                                    400,
+                                    200)
+                    );
                 } catch (NonexistentEntityException ex) {
                     System.out.println("No existe: " + ex.getMessage());
                 }
@@ -1531,7 +1590,13 @@ public class DemoPersistence extends Application {
                 }
             }
         });
-        cajitaCreaCliente.getChildren().addAll(documentoTextField, nombreTextField, apellidoTextField, telefonoTextField, crearClienteButton, messageLabel);
+        cajitaCreaCliente.getChildren().addAll(
+                documentoTextField,
+                nombreTextField,
+                apellidoTextField,
+                telefonoTextField,
+                crearClienteButton,
+                messageLabel);
         return cajitaCreaCliente;
     }
 
@@ -1593,7 +1658,12 @@ public class DemoPersistence extends Application {
         telefonoColumn.setCellValueFactory(new PropertyValueFactory<>("telefono"));
 
         // Agregar columnas a la tabla
-        clientesTableView.getColumns().addAll(idColumn, documentoColumn, nombreColumn, apellidoColumn, telefonoColumn);
+        clientesTableView.getColumns().addAll(
+                idColumn,
+                documentoColumn,
+                nombreColumn,
+                apellidoColumn,
+                telefonoColumn);
 
         // Llamar al controlador de Clientes para obtener todos los clientes
         List<Cliente> clientes = manejoCliente.findClienteEntities();
@@ -1630,7 +1700,10 @@ public class DemoPersistence extends Application {
         });
 
         acomodaLista.getChildren().add(clientesTableView);
-        cajitaListaClientes.getChildren().addAll(buscarClienteButton, acomodaLista, messageLabel);
+        cajitaListaClientes.getChildren().addAll(
+                buscarClienteButton,
+                acomodaLista,
+                messageLabel);
         return cajitaListaClientes;
     }
 
