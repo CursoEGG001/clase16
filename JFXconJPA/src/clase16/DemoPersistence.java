@@ -81,31 +81,34 @@ public class DemoPersistence extends Application {
         menuComboBox.getItems().addAll("Autores", "Editoriales", "Libros", "Prestamos", "Clientes");
         menuComboBox.setOnAction(event -> {
             String opcion = menuComboBox.getSelectionModel().getSelectedItem();
-            if (opcion.equals("Autores")) {
-                if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
-                    principio.getChildren().remove(1);
-                }
-                principio.getChildren().add(menuAutores());
-            } else if (opcion.equals("Editoriales")) {
-                if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
-                    principio.getChildren().remove(1);
-                }
-                principio.getChildren().add(menuEditoriales());
-            } else if (opcion.equals("Libros")) {
-                if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
-                    principio.getChildren().remove(1);
-                }
-                principio.getChildren().add(menuLibros());
-            } else if (opcion.equals("Prestamos")) {
-                if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
-                    principio.getChildren().remove(1);
-                }
-                principio.getChildren().add(menuPrestamos());
-            } else if (opcion.equals("Clientes")) {
-                if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
-                    principio.getChildren().remove(1);
-                }
-                principio.getChildren().add(menuClientes());
+            switch (opcion) {
+                case "Autores":
+                    if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
+                        principio.getChildren().remove(1);
+                    }   principio.getChildren().add(menuAutores());
+                    break;
+                case "Editoriales":
+                    if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
+                        principio.getChildren().remove(1);
+                    }   principio.getChildren().add(menuEditoriales());
+                    break;
+                case "Libros":
+                    if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
+                        principio.getChildren().remove(1);
+                    }   principio.getChildren().add(menuLibros());
+                    break;
+                case "Prestamos":
+                    if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
+                        principio.getChildren().remove(1);
+                    }   principio.getChildren().add(menuPrestamos());
+                    break;
+                case "Clientes":
+                    if (principio.getChildren().size() > 1 && principio.getChildren().get(1) instanceof VBox) {
+                        principio.getChildren().remove(1);
+                    }   principio.getChildren().add(menuClientes());
+                    break;
+                default:
+                    break;
             }
         });
 
@@ -289,26 +292,23 @@ public class DemoPersistence extends Application {
         messageLabel = new Label();
         cajitaActualizaAutor = new VBox();
 
-        updateButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    long id = Long.parseLong(idTextField.getText());
-                    String name = nameTextField.getText();
-
-                    // Llama el AuthorController para encontrar el Autor por ID
-                    Autor autor = manejoAutor.findAutor(id);
-
-                    if (autor != null) {
-                        autor.setNombre(name);
-                        manejoAutor.edit(autor);
-                        messageLabel.setText("Autor Actualizado correctamente.");
-                    } else {
-                        messageLabel.setText("Autor no encontrado.");
-                    }
-                } catch (Exception ex) {
-                    messageLabel.setText(ex.getMessage());
+        updateButton.setOnAction((ActionEvent event) -> {
+            try {
+                long id = Long.parseLong(idTextField.getText());
+                String name = nameTextField.getText();
+                
+                // Llama el AuthorController para encontrar el Autor por ID
+                Autor autor = manejoAutor.findAutor(id);
+                
+                if (autor != null) {
+                    autor.setNombre(name);
+                    manejoAutor.edit(autor);
+                    messageLabel.setText("Autor Actualizado correctamente.");
+                } else {
+                    messageLabel.setText("Autor no encontrado.");
                 }
+            } catch (Exception ex) {
+                messageLabel.setText(ex.getMessage());
             }
         });
 
@@ -371,29 +371,15 @@ public class DemoPersistence extends Application {
         bandejaPresentacion.getChildren().add(presentador);
         cajitaMenuEditoriales.getChildren().add(bandejaPresentacion);
 
-        crearButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    for (int i = 0; i <= presentador.getChildren().size(); i++) {
-                        presentador.getChildren().remove(i);
-                    }
-                }
-                presentador.getChildren().add(crearEditorial());
+        crearButton.setOnAction(new EventHandlerImpl(presentador));
 
-            }
-        });
-
-        buscarButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
-                    for (int i = 0; i <= presentador.getChildren().size(); i++) {
-                        presentador.getChildren().remove(i);
-                    }
+        buscarButton.setOnAction((ActionEvent event) -> {
+            if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
+                for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                    presentador.getChildren().remove(i);
                 }
-                presentador.getChildren().add(buscarEditorial());
             }
+            presentador.getChildren().add(buscarEditorial());
         });
 
         listarButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1802,6 +1788,26 @@ public class DemoPersistence extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private class EventHandlerImpl implements EventHandler<ActionEvent> {
+
+        private final Pane presentador;
+
+        public EventHandlerImpl(Pane presentador) {
+            this.presentador = presentador;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            if (presentador.getChildren().size() > 1 && presentador.getChildren().get(1) instanceof VBox) {
+                for (int i = 0; i <= presentador.getChildren().size(); i++) {
+                    presentador.getChildren().remove(i);
+                }
+            }
+            presentador.getChildren().add(crearEditorial());
+            
+        }
     }
 
 }
